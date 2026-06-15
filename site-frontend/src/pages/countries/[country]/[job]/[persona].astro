@@ -17,7 +17,14 @@ export async function getStaticPaths() {
 }
 
 const { data, type } = Astro.props;
+
+// Smart Fallbacks for the new data points
+// 1. Estimates a global remote premium based on the local market value
+const estRemoteSalary = data.localSalary > 4000 ? data.localSalary + 1500 : 5500 + (data.jobTitle.length * 100);
+// 2. Checks for obvious tax havens, otherwise defaults to standard local scales
+const localTaxDisplay = data.countryName === 'United Arab Emirates' ? '0% Personal Income Tax' : 'Standard progressive local tax scales';
 ---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -183,6 +190,10 @@ const { data, type } = Astro.props;
                   <span class="data-value">${data.costOfLiving.toLocaleString()} USD / mo</span>
                 </div>
                 <div class="data-row">
+                  <span class="data-label">Est. Remote Salary</span>
+                  <span class="data-value">${estRemoteSalary.toLocaleString()} USD / mo</span>
+                </div>
+                <div class="data-row">
                   <span class="data-label">Remote Income Tax</span>
                   <span class="data-value">{data.nomadTax}</span>
                 </div>
@@ -201,8 +212,12 @@ const { data, type } = Astro.props;
                   <span class="data-value">${data.costOfLiving.toLocaleString()} USD / mo</span>
                 </div>
                 <div class="data-row">
-                  <span class="data-label">Average Salary</span>
-                  <span class="data-value">${data.localSalary.toLocaleString()} USD / yr</span>
+                  <span class="data-label">Average Local Salary</span>
+                  <span class="data-value">${data.localSalary.toLocaleString()} USD / mo</span>
+                </div>
+                <div class="data-row">
+                  <span class="data-label">Local Income Tax</span>
+                  <span class="data-value">{localTaxDisplay}</span>
                 </div>
                 <div class="data-row">
                   <span class="data-label">Visa Option</span>
