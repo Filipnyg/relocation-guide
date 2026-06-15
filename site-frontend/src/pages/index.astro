@@ -1,56 +1,202 @@
 ---
 import data from '../data.json';
 
-// 1. Extract completely unique countries and sort them alphabetically..
-const uniqueCountries = Array.from(
-  new Map(data.map(item => [item.countrySlug, item.countryName])).entries()
-).map(([slug, name]) => ({ name, slug }))
-.sort((a, b) => a.name.localeCompare(b.name));
+// Grouping logic for countries and jobs to display on the homepage
+const countries = [...new Set(data.map(item => item.countryName))].sort();
+const jobs = [...new Set(data.map(item => item.jobTitle))].sort();
 
-// 2. Extract completely unique jobs and sort them alphabetically
-const uniqueJobs = Array.from(
-  new Map(data.map(item => [item.jobSlug, item.jobTitle])).entries()
-).map(([slug, title]) => ({ title, slug }))
-.sort((a, b) => a.title.localeCompare(b.title));
+// Helper to find slugs
+const getCountrySlug = (name) => data.find(item => item.countryName === name)?.countrySlug;
+const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlug;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="google-site-verification" content="EK2aLb4_ZKCvOfSWETXcFD-0_YOvd2vb-Zr16AsYQb4" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EverywhereJob - Relocation, Salary & Visa Directories</title>
+    <title>EverywhereJob - Global Relocation, Visa & Salary Guides</title>
+    <meta name="description" content="Explore programmatic relocation guides for remote workers and expats across 40 countries and dozens of specialized tech roles." />
+    
     <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 0 auto; padding: 40px 20px; color: #1e293b; background: #f8fafc; }
-      h1 { text-align: center; color: #0f172a; margin-bottom: 10px; font-size: 2.5rem; }
-      p.subtitle { text-align: center; color: #64748b; font-size: 1.2rem; margin-bottom: 50px; }
-      h2 { color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 40px; }
-      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-bottom: 40px; }
-      .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgb(0 0 0 / 0.1); text-decoration: none; color: #334155; font-weight: 500; transition: all 0.2s; border: 1px solid #e2e8f0; text-align: center; }
-      .card:hover { border-color: #3b82f6; color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+      /* Modern Reset & Typography */
+      body { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        background-color: #f4f4f5; 
+        color: #3f3f46; 
+        line-height: 1.6; 
+        padding: 0 0 4rem 0;
+        margin: 0;
+      }
+
+      /* Premium Header Bar */
+      .site-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e4e4e7;
+        padding: 1.25rem 1.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        margin-bottom: 3rem;
+      }
+      .header-container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .logo-icon {
+        font-size: 1.3rem;
+      }
+      .logo-text {
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #18181b;
+        letter-spacing: -0.03em;
+      }
+      .logo-highlight {
+        color: #16a34a;
+      }
+
+      .wrapper { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+      
+      /* Hero Intro section */
+      .hero-intro {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .hero-intro h1 {
+        font-size: 2.5rem;
+        color: #18181b;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin-bottom: 0.5rem;
+      }
+      .hero-intro p {
+        font-size: 1.15rem;
+        color: #71717a;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* Split Directory Layout */
+      .directory-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+      
+      /* Main Directory Cards */
+      .card { 
+        background: #ffffff; 
+        border-radius: 20px; 
+        padding: 2.5rem; 
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); 
+        border: 1px solid #e4e4e7;
+      }
+      
+      .card h2 { 
+        font-size: 1.35rem; 
+        color: #18181b; 
+        margin-top: 0; 
+        margin-bottom: 1.5rem;
+        font-weight: 700; 
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Clean Link Lists */
+      .link-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .link-list li a {
+        display: block;
+        padding: 0.75rem 1rem;
+        background: #fafafa;
+        border: 1px solid #f4f4f5;
+        border-radius: 10px;
+        color: #27272a;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+      }
+      .link-list li a:hover {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #16a34a;
+        transform: translateX(2px);
+      }
+
+      @media (max-width: 768px) {
+        .directory-grid { grid-template-columns: 1fr; }
+        .hero-intro h1 { font-size: 2rem; }
+      }
     </style>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8713635738444412" crossorigin="anonymous"></script>
   </head>
   <body>
-    <h1>EverywhereJob</h1>
-    <p class="subtitle">Find your ideal global relocation paths, tax rates, and visa options for 2026.</p>
+    
+    <header class="site-header">
+      <div class="header-container">
+        <span class="logo-icon">💼</span>
+        <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
+      </div>
+    </header>
 
-    <h2>Explore by Country</h2>
-    <div class="grid">
-      {uniqueCountries.map((country) => (
-        /* This dynamically links to the default 'nomad' persona for the first job in our dataset for that country */
-        <a href={`/countries/${country.slug}/${uniqueJobs[0].slug}/nomad`} class="card">
-          {country.name}
-        </a>
-      ))}
-    </div>
+    <div class="wrapper">
+      
+      <section class="hero-intro">
+        <h1>Find Your Next Target Move</h1>
+        <p>Select a country or a specialized career path below to explore tailored relocation costs, visa procedures, and tax breakdowns.</p>
+      </section>
 
-    <h2>Explore by Profession</h2>
-    <div class="grid">
-      {uniqueJobs.map((job) => (
-        /* This dynamically links to the default 'nomad' persona for the first country in our dataset for that job */
-        <a href={`/countries/${uniqueCountries[0].slug}/${job.slug}/nomad`} class="card">
-          {job.title}
-        </a>
-      ))}
+      <main class="directory-grid">
+        
+        <div class="card">
+          <h2><span>🌍</span> Explore By Country</h2>
+          <ul class="link-list">
+            {countries.map((countryName) => {
+              const slug = getCountrySlug(countryName);
+              // Link directly to the default 'nomad' view for a popular software engineer role as an entryway
+              return (
+                <li>
+                  <a href={`/countries/${slug}/software-engineer/nomad`}>
+                    {countryName} Guides
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2><span>👨‍💻</span> Explore By Profession</h2>
+          <ul class="link-list">
+            {jobs.map((jobTitle) => {
+              const slug = getJobSlug(jobTitle);
+              // Link directly to the default 'nomad' view in a popular country like spain as an entryway
+              return (
+                <li>
+                  <a href={`/countries/spain/${slug}/nomad`}>
+                    {jobTitle} Frameworks
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+      </main>
     </div>
   </body>
 </html>
