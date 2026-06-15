@@ -1,7 +1,6 @@
 ---
 import data from '../../data.json';
 
-
 export async function getStaticPaths() {
   const uniqueJobs = [...new Set(data.map(item => item.jobTitle))];
   return uniqueJobs.map(title => {
@@ -13,66 +12,48 @@ export async function getStaticPaths() {
   });
 }
 
-
 const { job } = Astro.params;
 const { jobTitle } = Astro.props;
 
-// Filter out all countries available for this specific job
 const availableCountries = data
   .filter(item => item.jobSlug === job)
   .sort((a, b) => a.countryName.localeCompare(b.countryName));
 ---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Best Countries for {jobTitle}s - EverywhereJob</title>
     <style>
-      body { 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-        background-color: #f4f4f5; color: #3f3f46; line-height: 1.6; padding: 0 0 4rem 0; margin: 0;
-      }
-      .site-header {
-        background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem;
-      }
-      .header-container {
-        max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 0.5rem; text-decoration: none;
-      }
-      .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
+      body { font-family: 'Inter', sans-serif; background-color: #f4f4f5; color: #3f3f46; margin: 0; padding-bottom: 4rem; }
+      .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; margin-bottom: 3rem; }
+      .header-container { max-width: 760px; margin: 0 auto; display: flex; text-decoration: none; color: #18181b; font-weight: 800; font-size: 1.2rem; }
       .logo-highlight { color: #16a34a; }
       .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem; }
-      .card { 
-        background: #ffffff; border-radius: 20px; padding: 3rem; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); border: 1px solid #e4e4e7;
-      }
-      h1 { font-size: 2.2rem; color: #18181b; margin-top: 0; font-weight: 800; letter-spacing: -0.03em; }
-      p.subtitle { color: #71717a; font-size: 1.1rem; margin-bottom: 2.5rem; }
-      .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .link-list li a {
-        display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; transition: all 0.2s ease;
-      }
-      .link-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateX(4px); }
-      .badge { background: #e4e4e7; color: #52525b; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.85rem; }
-      .link-list li a:hover .badge { background: #dcfce7; color: #15803d; }
+      .card { background: #ffffff; border-radius: 20px; padding: 3rem; border: 1px solid #e4e4e7; }
+      h1 { font-size: 2.2rem; margin-top: 0; color: #18181b; }
+      .link-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+      .link-list li a { display: flex; justify-content: space-between; padding: 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; text-decoration: none; color: #27272a; font-weight: 600; }
+      .link-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
     </style>
   </head>
   <body>
     <header class="site-header">
-      <a href="/" class="header-container">
-        <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
-      </a>
+      <a href="/" class="header-container">💼 Everywhere<span class="logo-highlight">Job</span></a>
     </header>
-
     <div class="wrapper">
       <div class="card">
         <h1>Global Markets for {jobTitle}s</h1>
-        <p class="subtitle">Select a destination below to unlock verified local salaries, income tax brackets, and official relocation visas for a {jobTitle}.</p>
-        
         <ul class="link-list">
-          {availableCountries.map(country => (
+          {availableCountries.map(c => (
             <li>
-              <a href={`/countries/${country.countrySlug}/${job}/nomad`}>
-                <span>{country.countryName}</span>
-                <span class="badge">${country.localSalary.toLocaleString()} / mo →</span>
+              <a href={`/countries/${c.countrySlug}/${job}/nomad`}>
+                <div>
+                  <span style="display:block; font-size: 1.1rem;">{c.countryName}</span>
+                  <a href={`https://www.google.com/search?q=${jobTitle}+jobs+in+${c.countryName}`} target="_blank" style="font-size: 0.8rem; color: #16a34a; text-decoration: underline;">Browse local openings →</a>
+                </div>
+                <span class="badge">${c.localSalary.toLocaleString()} / mo</span>
               </a>
             </li>
           ))}
