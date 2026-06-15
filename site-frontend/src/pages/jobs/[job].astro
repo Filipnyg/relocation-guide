@@ -1,6 +1,7 @@
 ---
 import data from '../../data.json';
 
+
 export async function getStaticPaths() {
   const uniqueJobs = [...new Set(data.map(item => item.jobTitle))];
   return uniqueJobs.map(title => {
