@@ -1,0 +1,103 @@
+---
+import data from '../../../../data.json';
+
+export async function getStaticPaths() {
+  const paths = [];
+  data.forEach((row) => {
+    paths.push({
+      params: { country: row.countrySlug, job: row.jobSlug, persona: 'nomad' },
+      props: { data: row, type: 'nomad' },
+    });
+    paths.push({
+      params: { country: row.countrySlug, job: row.jobSlug, persona: 'expat' },
+      props: { data: row, type: 'expat' },
+    });
+  });
+  return paths;
+}
+
+const { data, type } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="google-site-verification" content="EK2aLb4_ZKCvOfSWETXcFD-0_YOvd2vb-Zr16AsYQb4" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moving to {data.countryName} as a {data.jobTitle} ({type === 'nomad' ? 'Remote Guide' : 'Local Guide'})</title>
+    <meta name="description" content={`A complete 2026 relocation guide for a ${data.jobTitle} moving to ${data.countryName}. Compare visa options, salaries, and tax rates.`} />
+    
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #1e293b; background: #f8fafc; }
+      .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+      h1 { color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; font-size: 1.8rem;}
+      
+      .toggle-nav { display: flex; gap: 15px; margin: 25px 0; border-bottom: 1px solid #cbd5e1; padding-bottom: 20px;}
+      .toggle-nav a { padding: 12px 20px; text-decoration: none; border-radius: 8px; border: 2px solid #3b82f6; color: #3b82f6; font-weight: 600; transition: 0.2s;}
+      .toggle-nav a:hover { background: #eff6ff; }
+      .toggle-nav a.active { background: #3b82f6; color: white; }
+      
+      .data-list { background: #f1f5f9; padding: 20px; border-radius: 8px; list-style-type: none; margin: 0;}
+      .data-list li { padding: 10px 0; border-bottom: 1px solid #cbd5e1; font-size: 1.1rem;}
+      .data-list li:last-child { border-bottom: none; }
+      .data-list strong { color: #0f172a; }
+    </style>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8713635738444412" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+    
+    <div class="container">
+      <h1>{data.jobTitle} Salary & Visa Guide in {data.countryName}</h1>
+
+      <nav class="toggle-nav">
+        <a href={`/countries/${data.countrySlug}/${data.jobSlug}/nomad`} class={type === 'nomad' ? 'active' : ''}>
+          Remote Worker (Digital Nomad)
+        </a>
+        <a href={`/countries/${data.countrySlug}/${data.jobSlug}/expat`} class={type === 'expat' ? 'active' : ''}>
+          Local Hire (Expat)
+        </a>
+      </nav>
+
+<section style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #cbd5e1;">
+        <h2>What to Expect in {data.countryName}</h2>
+        <p style="font-size: 1.1rem; line-height: 1.6; color: #334155;">
+          {data.localContext}
+        </p>
+      </section>
+
+      <section style="margin-top: 30px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 8px;">
+        <h3 style="margin-top: 0; color: #166534;">Official Application Portals</h3>
+        <p style="margin-bottom: 15px;">Ready to start your move? Always use official government web resources to apply for your paperwork:</p>
+        <a href={data.visaLink} target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #166534; color: white; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600;">
+          Visit Official Immigration Website →
+        </a>
+      </section>
+      
+      <main>
+        {type === 'nomad' ? (
+          <section>
+            <h2>The Remote Worker Route</h2>
+            <p>If you plan to keep your foreign salary and live in {data.countryName}, you will apply for the <strong>{data.nomadVisa}</strong>.</p>
+            <ul class="data-list">
+              <li><strong>Expected Cost of Living:</strong> ${data.costOfLiving.toLocaleString()} USD / month</li>
+              <li><strong>Remote Income Tax:</strong> {data.nomadTax}</li>
+              <li><strong>Best Visa Option:</strong> {data.nomadVisa}</li>
+            </ul>
+          </section>
+        ) : (
+          <section>
+            <h2>The Local Hire Route</h2>
+            <p>To work for a local company in {data.countryName}, you will need employer sponsorship for the <strong>{data.localVisa}</strong>.</p>
+            <ul class="data-list">
+              <li><strong>Expected Cost of Living:</strong> ${data.costOfLiving.toLocaleString()} USD / month</li>
+              <li><strong>Average Local Salary:</strong> ${data.localSalary.toLocaleString()} USD / year</li>
+              <li><strong>Best Visa Option:</strong> {data.localVisa}</li>
+            </ul>
+          </section>
+        )}
+      </main>
+    </div>
+  </body>
+</html>
