@@ -1,13 +1,40 @@
 ---
 import data from '../data.json';
 
-// Grouping logic for countries and jobs to display on the homepage
+// --- DIRECTORY LOGIC ---
 const countries = [...new Set(data.map(item => item.countryName))].sort();
 const jobs = [...new Set(data.map(item => item.jobTitle))].sort();
-
-// Helper to find slugs
 const getCountrySlug = (name) => data.find(item => item.countryName === name)?.countrySlug;
 const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlug;
+
+// --- LEADERBOARD LOGIC ---
+
+// 1. Top 5 Highest Paying Job Configurations
+const topSalaries = [...data].sort((a, b) => b.localSalary - a.localSalary).slice(0, 5);
+
+// 2. Quality of Life Index (Standardized Livability Score out of 100)
+const qolScores = {
+  "switzerland": 96, "netherlands": 95, "denmark": 95, "norway": 94, "finland": 94,
+  "iceland": 93, "australia": 93, "new-zealand": 92, "sweden": 92, "germany": 91,
+  "ireland": 90, "estonia": 89, "canada": 89, "japan": 88, "singapore": 88, 
+  "united-states": 87, "united-kingdom": 86, "spain": 85, "france": 84, "portugal": 84, 
+  "czech-republic": 83, "taiwan": 83, "south-korea": 82, "italy": 81, "croatia": 80, 
+  "malta": 79, "cyprus": 78, "greece": 77, "united-arab-emirates": 76, "romania": 75, 
+  "hungary": 74, "latvia": 73, "malaysia": 68, "panama": 65, "costa-rica": 64, 
+  "mauritius": 63, "montenegro": 62, "mexico": 60, "georgia": 58, "thailand": 57, 
+  "colombia": 55, "indonesia": 54, "vietnam": 53, "brazil": 52, "argentina": 51, 
+  "south-africa": 50, "ecuador": 49, "belize": 48
+};
+
+// Extract unique countries, assign their QoL score (default to 70 if missing), and grab the top 5
+const uniqueCountriesData = Array.from(
+  new Map(data.map(item => [item.countryName, { name: item.countryName, slug: item.countrySlug }])).values()
+);
+
+const topQualityOfLife = uniqueCountriesData
+  .map(country => ({ ...country, score: qolScores[country.slug] || 70 }))
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 5);
 ---
 
 <html lang="en">
@@ -48,51 +75,22 @@ const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlu
         text-decoration: none;
         transition: opacity 0.2s;
       }
-      .header-container:hover {
-        opacity: 0.8;
-      }
-      .logo-icon {
-        font-size: 1.3rem;
-      }
-      .logo-text {
-        font-weight: 800;
-        font-size: 1.2rem;
-        color: #18181b;
-        letter-spacing: -0.03em;
-      }
-      .logo-highlight {
-        color: #16a34a;
-      }
+      .header-container:hover { opacity: 0.8; }
+      .logo-icon { font-size: 1.3rem; }
+      .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
+      .logo-highlight { color: #16a34a; }
 
       .wrapper { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
       
       /* Hero Intro section */
-      .hero-intro {
-        text-align: center;
-        margin-bottom: 3rem;
-      }
-      .hero-intro h1 {
-        font-size: 2.5rem;
-        color: #18181b;
-        font-weight: 800;
-        letter-spacing: -0.04em;
-        margin-bottom: 0.5rem;
-      }
-      .hero-intro p {
-        font-size: 1.15rem;
-        color: #71717a;
-        max-width: 600px;
-        margin: 0 auto;
-      }
+      .hero-intro { text-align: center; margin-bottom: 3rem; }
+      .hero-intro h1 { font-size: 2.5rem; color: #18181b; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+      .hero-intro p { font-size: 1.15rem; color: #71717a; max-width: 600px; margin: 0 auto; }
 
-      /* Split Directory Layout */
-      .directory-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-      }
+      /* Layout Grids */
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
       
-      /* Main Directory Cards */
+      /* Main Cards */
       .card { 
         background: #ffffff; 
         border-radius: 20px; 
@@ -100,49 +98,32 @@ const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlu
         box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); 
         border: 1px solid #e4e4e7;
       }
-      
       .card h2 { 
-        font-size: 1.35rem; 
-        color: #18181b; 
-        margin-top: 0; 
-        margin-bottom: 1.5rem;
-        font-weight: 700; 
-        letter-spacing: -0.02em;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        font-size: 1.35rem; color: #18181b; margin-top: 0; margin-bottom: 1.5rem;
+        font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.5rem;
       }
 
-      /* Clean Link Lists */
-      .link-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
+      /* Leaderboard Lists */
+      .leaderboard-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+      .leaderboard-list li a {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0.85rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px;
+        color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease;
       }
+      .leaderboard-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+      .stat-badge { background: #e2e8f0; color: #334155; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; }
+      .leaderboard-list li a:hover .stat-badge { background: #dcfce7; color: #15803d; }
+
+      /* Clean Link Lists (Directory) */
+      .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
       .link-list li a {
-        display: block;
-        padding: 0.75rem 1rem;
-        background: #fafafa;
-        border: 1px solid #f4f4f5;
-        border-radius: 10px;
-        color: #27272a;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.95rem;
-        transition: all 0.2s ease;
+        display: block; padding: 0.75rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px;
+        color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease;
       }
-      .link-list li a:hover {
-        background: #f0fdf4;
-        border-color: #bbf7d0;
-        color: #16a34a;
-        transform: translateX(2px);
-      }
+      .link-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateX(2px); }
 
       @media (max-width: 768px) {
-        .directory-grid { grid-template-columns: 1fr; }
+        .grid-2 { grid-template-columns: 1fr; }
         .hero-intro h1 { font-size: 2rem; }
       }
     </style>
@@ -162,17 +143,45 @@ const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlu
       
       <section class="hero-intro">
         <h1>Find Your Next Target Move</h1>
-        <p>Select a country or a specialized career path below to explore tailored relocation costs, visa procedures, and tax breakdowns.</p>
+        <p>Explore programmatic relocation guides for remote workers and expats across 40 countries and dozens of specialized tech roles.</p>
       </section>
 
-      <main class="directory-grid">
-        
+      <section class="grid-2">
+        <div class="card">
+          <h2><span>📈</span> Top Paying Markets</h2>
+          <ul class="leaderboard-list">
+            {topSalaries.map((job) => (
+              <li>
+                <a href={`/countries/${job.countrySlug}/${job.jobSlug}/expat`}>
+                  <span>{job.jobTitle} in {job.countryName}</span>
+                  <span class="stat-badge">${job.localSalary.toLocaleString()}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2><span>🌟</span> Highest Quality of Life</h2>
+          <ul class="leaderboard-list">
+            {topQualityOfLife.map((country) => (
+              <li>
+                <a href={`/countries/${country.slug}/software-engineer/nomad`}>
+                  <span>{country.name}</span>
+                  <span class="stat-badge">Score: {country.score}/100</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <main class="grid-2">
         <div class="card">
           <h2><span>🌍</span> Explore By Country</h2>
           <ul class="link-list">
             {countries.map((countryName) => {
               const slug = getCountrySlug(countryName);
-              // Link directly to the default 'nomad' view for a popular software engineer role as an entryway
               return (
                 <li>
                   <a href={`/countries/${slug}/software-engineer/nomad`}>
@@ -189,7 +198,6 @@ const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlu
           <ul class="link-list">
             {jobs.map((jobTitle) => {
               const slug = getJobSlug(jobTitle);
-              // Link directly to the default 'nomad' view in a popular country like spain as an entryway
               return (
                 <li>
                   <a href={`/countries/spain/${slug}/nomad`}>
@@ -200,8 +208,8 @@ const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlu
             })}
           </ul>
         </div>
-
       </main>
+
     </div>
   </body>
 </html>
