@@ -45,6 +45,11 @@ const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlu
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .header-container:hover {
+        opacity: 0.8;
       }
       .logo-icon {
         font-size: 1.3rem;
@@ -147,10 +152,10 @@ const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlu
   <body>
     
     <header class="site-header">
-      <div class="header-container">
+      <a href="/" class="header-container">
         <span class="logo-icon">💼</span>
         <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
-      </div>
+      </a>
     </header>
 
     <div class="wrapper">
