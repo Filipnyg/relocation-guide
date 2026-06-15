@@ -1,6 +1,7 @@
 ---
 import data from '../data.json';
 
+
 // --- DIRECTORY LOGIC ---
 const countries = [...new Set(data.map(item => item.countryName))].sort();
 const jobs = [...new Set(data.map(item => item.jobTitle))].sort();
@@ -8,11 +9,8 @@ const getCountrySlug = (name) => data.find(item => item.countryName === name)?.c
 const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlug;
 
 // --- LEADERBOARD LOGIC ---
-
-// 1. Top 5 Highest Paying Job Configurations
 const topSalaries = [...data].sort((a, b) => b.localSalary - a.localSalary).slice(0, 5);
 
-// 2. Quality of Life Index (Standardized Livability Score out of 100)
 const qolScores = {
   "switzerland": 96, "netherlands": 95, "denmark": 95, "norway": 94, "finland": 94,
   "iceland": 93, "australia": 93, "new-zealand": 92, "sweden": 92, "germany": 91,
@@ -26,7 +24,6 @@ const qolScores = {
   "south-africa": 50, "ecuador": 49, "belize": 48
 };
 
-// Extract unique countries, assign their QoL score (default to 70 if missing), and grab the top 5
 const uniqueCountriesData = Array.from(
   new Map(data.map(item => [item.countryName, { name: item.countryName, slug: item.countrySlug }])).values()
 );
@@ -36,7 +33,6 @@ const topQualityOfLife = uniqueCountriesData
   .sort((a, b) => b.score - a.score)
   .slice(0, 5);
 ---
-
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -46,7 +42,6 @@ const topQualityOfLife = uniqueCountriesData
     <meta name="description" content="Explore programmatic relocation guides for remote workers and expats across 40 countries and dozens of specialized tech roles." />
     
     <style>
-      /* Modern Reset & Typography */
       body { 
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
         background-color: #f4f4f5; 
@@ -55,8 +50,6 @@ const topQualityOfLife = uniqueCountriesData
         padding: 0 0 4rem 0;
         margin: 0;
       }
-
-      /* Premium Header Bar */
       .site-header {
         background: #ffffff;
         border-bottom: 1px solid #e4e4e7;
@@ -79,18 +72,11 @@ const topQualityOfLife = uniqueCountriesData
       .logo-icon { font-size: 1.3rem; }
       .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
       .logo-highlight { color: #16a34a; }
-
       .wrapper { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
-      
-      /* Hero Intro section */
       .hero-intro { text-align: center; margin-bottom: 3rem; }
       .hero-intro h1 { font-size: 2.5rem; color: #18181b; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
       .hero-intro p { font-size: 1.15rem; color: #71717a; max-width: 600px; margin: 0 auto; }
-
-      /* Layout Grids */
       .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
-      
-      /* Main Cards */
       .card { 
         background: #ffffff; 
         border-radius: 20px; 
@@ -102,8 +88,6 @@ const topQualityOfLife = uniqueCountriesData
         font-size: 1.35rem; color: #18181b; margin-top: 0; margin-bottom: 1.5rem;
         font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.5rem;
       }
-
-      /* Leaderboard Lists */
       .leaderboard-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
       .leaderboard-list li a {
         display: flex; justify-content: space-between; align-items: center;
@@ -113,25 +97,20 @@ const topQualityOfLife = uniqueCountriesData
       .leaderboard-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
       .stat-badge { background: #e2e8f0; color: #334155; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; }
       .leaderboard-list li a:hover .stat-badge { background: #dcfce7; color: #15803d; }
-
-      /* Clean Link Lists (Directory) */
       .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
       .link-list li a {
         display: block; padding: 0.75rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px;
         color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease;
       }
       .link-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateX(2px); }
-
       @media (max-width: 768px) {
         .grid-2 { grid-template-columns: 1fr; }
         .hero-intro h1 { font-size: 2rem; }
       }
     </style>
-
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8713635738444412" crossorigin="anonymous"></script>
   </head>
   <body>
-    
     <header class="site-header">
       <a href="/" class="header-container">
         <span class="logo-icon">💼</span>
@@ -140,7 +119,6 @@ const topQualityOfLife = uniqueCountriesData
     </header>
 
     <div class="wrapper">
-      
       <section class="hero-intro">
         <h1>Find Your Next Target Move</h1>
         <p>Explore programmatic relocation guides for remote workers and expats across 40 countries and dozens of specialized tech roles.</p>
@@ -152,9 +130,9 @@ const topQualityOfLife = uniqueCountriesData
           <ul class="leaderboard-list">
             {topSalaries.map((job) => (
               <li>
-                <a href={`/countries/${job.countrySlug}/${job.jobSlug}/expat`}>
+                <a href={`/countries/${job.countrySlug}`}>
                   <span>{job.jobTitle} in {job.countryName}</span>
-                  <span class="stat-badge">${job.localSalary.toLocaleString()}</span>
+                  <span class="stat-badge">${job.localSalary.toLocaleString()} / mo</span>
                 </a>
               </li>
             ))}
@@ -166,7 +144,7 @@ const topQualityOfLife = uniqueCountriesData
           <ul class="leaderboard-list">
             {topQualityOfLife.map((country) => (
               <li>
-                <a href={`/countries/${country.slug}/software-engineer/nomad`}>
+                <a href={`/countries/${country.slug}`}>
                   <span>{country.name}</span>
                   <span class="stat-badge">Score: {country.score}/100</span>
                 </a>
@@ -184,8 +162,8 @@ const topQualityOfLife = uniqueCountriesData
               const slug = getCountrySlug(countryName);
               return (
                 <li>
-                  <a href={`/countries/${slug}/software-engineer/nomad`}>
-                    {countryName} Guides
+                  <a href={`/countries/${slug}`}>
+                    {countryName} Guides →
                   </a>
                 </li>
               );
@@ -200,8 +178,8 @@ const topQualityOfLife = uniqueCountriesData
               const slug = getJobSlug(jobTitle);
               return (
                 <li>
-                  <a href={`/countries/spain/${slug}/nomad`}>
-                    {jobTitle} Frameworks
+                  <a href={`/jobs/${slug}`}>
+                    {jobTitle} Jobs →
                   </a>
                 </li>
               );
@@ -209,7 +187,6 @@ const topQualityOfLife = uniqueCountriesData
           </ul>
         </div>
       </main>
-
     </div>
   </body>
 </html>
