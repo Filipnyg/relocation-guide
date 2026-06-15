@@ -47,9 +47,19 @@ const availableJobs = data
       <div class="card">
         <img src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80&sig=${country}`} alt={countryName} class="hero-image" />
         <h1>{countryName} Career Options</h1>
+        <p class="subtitle">Select your profession below to see visa policies, tax details, and market salaries. Use the search links to find active vacancies.</p>
+        
         <ul class="link-list">
           {availableJobs.map(job => (
-            <li><a href={`/countries/${country}/${job.jobSlug}/nomad`}><span>{job.jobTitle}</span><span>View Guide →</span></a></li>
+            <li>
+              <a href={`/countries/${country}/${job.jobSlug}/nomad`}>
+                <div>
+                  <span style="display:block; font-size: 1.1rem;">{job.jobTitle}</span>
+                  <a href={`https://www.linkedin.com/jobs/search/?keywords=${job.jobTitle}&location=${countryName}`} target="_blank" style="font-size: 0.8rem; color: #16a34a; text-decoration: underline;">Find {job.jobTitle} jobs in {countryName} →</a>
+                </div>
+                <span class="badge">View Guide →</span>
+              </a>
+            </li>
           ))}
         </ul>
       </div>
