@@ -1,7 +1,7 @@
 ---
 import data from '../data.json';
 
-// 1. Extract completely unique countries and sort them alphabetically
+// 1. Extract completely unique countries and sort them alphabetically..
 const uniqueCountries = Array.from(
   new Map(data.map(item => [item.countrySlug, item.countryName])).entries()
 ).map(([slug, name]) => ({ name, slug }))
