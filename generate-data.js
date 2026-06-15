@@ -101,8 +101,8 @@ countries.forEach(country => {
   });
 });
 
-// Write to the final data file
-const outputPath = path.join(process.cwd(), 'data.json');
+// Write directly into the Astro source folder
+const outputPath = path.join(process.cwd(), 'site-frontend', 'src', 'data.json');
 fs.writeFileSync(outputPath, JSON.stringify(generatedData, null, 2));
 
 console.log(`Success! Generated database with ${generatedData.length} records.`);
