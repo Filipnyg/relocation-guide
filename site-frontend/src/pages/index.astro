@@ -1,13 +1,11 @@
 ---
 import data from '../data.json';
 
-// --- DIRECTORY LOGIC ---
 const countries = [...new Set(data.map(item => item.countryName))].sort();
 const jobs = [...new Set(data.map(item => item.jobTitle))].sort();
 const getCountrySlug = (name) => data.find(item => item.countryName === name)?.countrySlug;
 const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlug;
 
-// --- LEADERBOARD LOGIC ---
 const topPayingMarkets = Array.from(
   new Map(
     [...data].sort((a, b) => b.localSalary - a.localSalary).map(item => [item.countrySlug, item])
@@ -18,7 +16,6 @@ const qolScores = { "switzerland": 96, "netherlands": 95, "denmark": 95, "norway
 const uniqueCountriesData = Array.from(new Map(data.map(item => [item.countryName, { name: item.countryName, slug: item.countrySlug }])).values());
 const topQualityOfLife = uniqueCountriesData.map(c => ({ ...c, score: qolScores[c.slug] || 70 })).sort((a, b) => b.score - a.score).slice(0, 5);
 
-// --- SEARCH DATA ENGINE ---
 const searchData = [
   ...countries.map(c => ({ name: c, url: `/countries/${getCountrySlug(c)}`, type: 'Country' })),
   ...jobs.map(j => ({ name: j, url: `/jobs/${getJobSlug(j)}`, type: 'Profession' }))
@@ -30,7 +27,7 @@ const searchData = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EverywhereJob - Global Relocation, Visa & Salary Guides</title>
-    <meta name="description" content="Compare verified salaries, living costs, and visa requirements for tech roles across 40 countries." />
+    <meta name="description" content="Compare verified salaries, living costs, and visa requirements across 40 countries." />
     
     <style>
       body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #09090b; color: #e4e4e7; line-height: 1.5; margin: 0; padding-bottom: 0; }
@@ -101,13 +98,13 @@ const searchData = [
 
     <div class="wrapper">
       <section class="hero-intro">
-        <h1>Global Relocation Index</h1>
-        <p>Verified structural parameters spanning engineering, architecture, and technology domains globally.</p>
+        <h1>Global Relocation Data</h1>
+        <p>Compare verified salaries, living costs, and visa requirements for in-demand professions around the world.</p>
       </section>
 
       <div class="search-container">
-        <span class="search-icon">//</span>
-        <input type="text" id="directorySearch" placeholder="Query location or profession matrix..." autocomplete="off" />
+        <span class="search-icon">🔍</span>
+        <input type="text" id="directorySearch" placeholder="Search for a country or profession..." autocomplete="off" />
         <div id="searchResults" class="search-dropdown"></div>
       </div>
 
@@ -116,7 +113,7 @@ const searchData = [
           <h2>Top Paying Markets</h2>
           <ul class="leaderboard-list">
             {topPayingMarkets.map((market) => (
-              <li><a href={`/countries/${market.countrySlug}`}><span>{market.countryName} Apex</span><span class="stat-badge">${market.localSalary.toLocaleString()} / mo</span></a></li>
+              <li><a href={`/countries/${market.countrySlug}`}><span>{market.countryName}</span><span class="stat-badge">${market.localSalary.toLocaleString()} / mo</span></a></li>
             ))}
           </ul>
         </div>
@@ -124,7 +121,7 @@ const searchData = [
           <h2>Quality of Life Index</h2>
           <ul class="leaderboard-list">
             {topQualityOfLife.map((country) => (
-              <li><a href={`/countries/${country.slug}`}><span>{country.name}</span><span class="stat-badge">Index: {country.score}/100</span></a></li>
+              <li><a href={`/countries/${country.slug}`}><span>{country.name}</span><span class="stat-badge">Score: {country.score}/100</span></a></li>
             ))}
           </ul>
         </div>
@@ -132,7 +129,7 @@ const searchData = [
 
       <main class="grid-2">
         <div class="card">
-          <h2>Geographic Nodes</h2>
+          <h2>Explore By Country</h2>
           <ul class="link-list filterable-list">
             {countries.map((countryName) => (
               <li><a href={`/countries/${getCountrySlug(countryName)}`}>{countryName}</a></li>
@@ -140,7 +137,7 @@ const searchData = [
           </ul>
         </div>
         <div class="card">
-          <h2>Professional Roles</h2>
+          <h2>Explore By Profession</h2>
           <ul class="link-list filterable-list">
             {jobs.map((jobTitle) => (
               <li><a href={`/jobs/${getJobSlug(jobTitle)}`}>{jobTitle}</a></li>
@@ -152,16 +149,16 @@ const searchData = [
 
     <footer class="contact-pane">
       <div class="contact-container">
-        <h2>Data Discrepancy Reporting</h2>
-        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 0.95rem;">System validation logs refresh quarterly. Submit manual telemetry adjustments below.</p>
+        <h2>Report Outdated Data</h2>
+        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 0.95rem;">We update our figures quarterly. If you spot an inaccuracy or have a question, please let us know.</p>
         
         <form action="https://formspree.io/f/xgobqeky" method="POST" class="contact-form">
-          <input type="email" name="email" placeholder="Verification Email" required />
-          <textarea name="message" rows="4" placeholder="Log details or amendments..." required></textarea>
-          <button type="submit">Submit Log</button>
+          <input type="email" name="email" placeholder="Your Email" required />
+          <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
+          <button type="submit">Send Message</button>
         </form>
         
-        <p style="margin-top: 3rem; font-size: 0.75rem; color: #52525b; font-family: monospace;">EverywhereJob v2.4.0 — Compiled from static statutory registries and international payroll logs.</p>
+        <p style="margin-top: 3rem; font-size: 0.75rem; color: #52525b;">EverywhereJob v2.4.0 — Compiled from official government portals and global salary reports.</p>
       </div>
     </footer>
 
@@ -195,7 +192,7 @@ const searchData = [
             `).join('');
             searchResults.style.display = 'block';
           } else {
-            searchResults.innerHTML = `<div style="padding: 0.85rem 1.25rem; color: #52525b; font-style: italic; font-size: 0.9rem;">No nodes match query string</div>`;
+            searchResults.innerHTML = `<div style="padding: 0.85rem 1.25rem; color: #52525b; font-style: italic; font-size: 0.9rem;">No exact matches found.</div>`;
             searchResults.style.display = 'block';
           }
         });

@@ -24,7 +24,7 @@ const availableCountries = data
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Global Compensation for {jobTitle}s - EverywhereJob</title>
+    <title>Global Salaries for {jobTitle}s - EverywhereJob</title>
     <style>
       body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #09090b; color: #e4e4e7; margin: 0; padding-bottom: 0; }
       .site-header { background: #18181b; border-bottom: 1px solid #27272a; padding: 1rem 1.5rem; margin-bottom: 3rem; position: sticky; top: 0; z-index: 100; }
@@ -38,7 +38,7 @@ const availableCountries = data
       
       .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
       
-      .breadcrumb { font-size: 0.8联rem; color: #71717a; margin-bottom: 2rem; font-family: monospace; }
+      .breadcrumb { font-size: 0.8rem; color: #71717a; margin-bottom: 2rem; }
       .breadcrumb a { color: #10b981; text-decoration: none; }
       .breadcrumb a:hover { text-decoration: underline; }
       .breadcrumb span { margin: 0 0.3rem; color: #3f3f46; }
@@ -80,11 +80,11 @@ const availableCountries = data
     <div class="wrapper">
       <div class="card">
         <nav class="breadcrumb">
-          <a href="/">ROOT</a> <span>//</span> {jobTitle.toUpperCase()}_MATRICES
+          <a href="/">Home</a> <span>/</span> {jobTitle}
         </nav>
 
-        <h1>{jobTitle} Allocations</h1>
-        <p class="subtitle">Global baseline analysis profiles displaying median compensation matrices across validated operational regions.</p>
+        <h1>Global {jobTitle} Salaries</h1>
+        <p class="subtitle">Compare average salaries and visa options for {jobTitle}s across different countries.</p>
         <ul class="link-list">
           {availableCountries.map(c => {
             const defaultLink = c.canWorkRemote !== false ? 'remote' : 'local';
@@ -92,7 +92,7 @@ const availableCountries = data
               <li>
                 <div>
                   <a href={`/countries/${c.countrySlug}/${job}/${defaultLink}`} class="country-link">{c.countryName}</a>
-                  <a href={`https://www.google.com/search?q=${jobTitle}+jobs+in+${c.countryName}`} target="_blank" rel="noopener noreferrer" class="search-inline-link">Query Search Matrix ↗</a>
+                  <a href={`https://www.google.com/search?q=${jobTitle}+jobs+in+${c.countryName}`} target="_blank" rel="noopener noreferrer" class="search-inline-link">Search Local Jobs ↗</a>
                 </div>
                 <a href={`/countries/${c.countrySlug}/${job}/${defaultLink}`} class="badge">${c.localSalary.toLocaleString()} / mo</a>
               </li>
@@ -104,13 +104,13 @@ const availableCountries = data
 
     <footer class="contact-pane">
       <div class="contact-container">
-        <h2>Data Discrepancy Reporting</h2>
-        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 0.95rem;">System validation logs refresh quarterly. Submit manual telemetry adjustments below.</p>
+        <h2>Report Outdated Data</h2>
+        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 0.95rem;">We update our data quarterly. If you spot an inaccuracy, please let us know.</p>
         
         <form action="https://formspree.io/f/xgobqeky" method="POST" class="contact-form">
-          <input type="email" name="email" placeholder="Verification Email" required />
-          <textarea name="message" rows="4" placeholder="Log details or amendments..." required></textarea>
-          <button type="submit">Submit Log</button>
+          <input type="email" name="email" placeholder="Your Email" required />
+          <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
+          <button type="submit">Send Message</button>
         </form>
       </div>
     </footer>

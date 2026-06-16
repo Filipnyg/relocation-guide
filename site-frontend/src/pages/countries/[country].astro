@@ -24,7 +24,7 @@ const availableJobs = data
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{countryName} Relocation Metrics - EverywhereJob</title>
+    <title>{countryName} Relocation Guide - EverywhereJob</title>
     <style>
       body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #09090b; color: #e4e4e7; margin: 0; padding-bottom: 0; }
       .site-header { background: #18181b; border-bottom: 1px solid #27272a; padding: 1rem 1.5rem; margin-bottom: 3rem; position: sticky; top: 0; z-index: 100; }
@@ -38,7 +38,7 @@ const availableJobs = data
       
       .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
       
-      .breadcrumb { font-size: 0.8rem; color: #71717a; margin-bottom: 2rem; font-family: monospace; }
+      .breadcrumb { font-size: 0.8rem; color: #71717a; margin-bottom: 2rem; }
       .breadcrumb a { color: #10b981; text-decoration: none; }
       .breadcrumb a:hover { text-decoration: underline; }
       .breadcrumb span { margin: 0 0.3rem; color: #3f3f46; }
@@ -54,7 +54,7 @@ const availableJobs = data
       .search-inline-link { font-size: 0.8rem; color: #a1a1aa; text-decoration: none; margin-top: 0.25rem; display: block; }
       .search-inline-link:hover { color: #10b981; text-decoration: underline; }
       .badge { background: #27272a; color: #e4e4e7; padding: 0.4rem 0.75rem; border-radius: 4px; font-size: 0.8rem; text-decoration: none; font-weight: 600; border: 1px solid transparent; }
-      .link-list li:hover final-badge .badge { border-color: #10b981; color: #10b981; }
+      .link-list li:hover .badge { border-color: #10b981; color: #10b981; }
       
       .contact-pane { background: #18181b; color: #e4e4e7; padding: 4rem 1.5rem; text-align: center; border-top: 1px solid #27272a; }
       .contact-container { max-width: 600px; margin: 0 auto; }
@@ -82,11 +82,11 @@ const availableJobs = data
     <div class="wrapper">
       <div class="card">
         <nav class="breadcrumb">
-          <a href="/">ROOT</a> <span>//</span> {countryName.toUpperCase()}_CHANNELS
+          <a href="/">Home</a> <span>/</span> {countryName}
         </nav>
 
         <h1>{countryName}</h1>
-        <p class="subtitle">Structural profile distributions mapping statutory visa limitations and index valuation profiles across active operational domains.</p>
+        <p class="subtitle">Compare local salaries, living costs, and visa requirements for roles in {countryName}.</p>
         <ul class="link-list">
           {availableJobs.map(job => {
             const defaultLink = job.canWorkRemote !== false ? 'remote' : 'local';
@@ -94,9 +94,9 @@ const availableJobs = data
               <li>
                 <div>
                   <a href={`/countries/${country}/${job.jobSlug}/${defaultLink}`} class="job-link">{job.jobTitle}</a>
-                  <a href={`https://www.linkedin.com/jobs/search/?keywords=${job.jobTitle}&location=${countryName}`} target="_blank" rel="noopener noreferrer" class="search-inline-link">Query API Vacancies ↗</a>
+                  <a href={`https://www.linkedin.com/jobs/search/?keywords=${job.jobTitle}&location=${countryName}`} target="_blank" rel="noopener noreferrer" class="search-inline-link">Find Jobs on LinkedIn ↗</a>
                 </div>
-                <a href={`/countries/${country}/${job.jobSlug}/${defaultLink}`} class="badge">Open Guide</a>
+                <a href={`/countries/${country}/${job.jobSlug}/${defaultLink}`} class="badge">View Guide</a>
               </li>
             );
           })}
@@ -106,13 +106,13 @@ const availableJobs = data
 
     <footer class="contact-pane">
       <div class="contact-container">
-        <h2>Data Discrepancy Reporting</h2>
-        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 0.95rem;">System validation logs refresh quarterly. Submit manual telemetry adjustments below.</p>
+        <h2>Report Outdated Data</h2>
+        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 0.95rem;">We update our data quarterly. If you spot an inaccuracy, please let us know.</p>
         
         <form action="https://formspree.io/f/xgobqeky" method="POST" class="contact-form">
-          <input type="email" name="email" placeholder="Verification Email" required />
-          <textarea name="message" rows="4" placeholder="Log details or amendments..." required></textarea>
-          <button type="submit">Submit Log</button>
+          <input type="email" name="email" placeholder="Your Email" required />
+          <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
+          <button type="submit">Send Message</button>
         </form>
       </div>
     </footer>

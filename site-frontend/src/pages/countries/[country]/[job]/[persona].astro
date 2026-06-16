@@ -28,16 +28,16 @@ const estRemoteSalary = data.localSalary > 4000 ? data.localSalary + 1500 : 5500
 const localTaxDisplay = data.countryName === 'United Arab Emirates' ? '0% Personal Income Tax' : 'Standard progressive local tax scales';
 
 const shareUrl = `https://everywherejob.com/countries/${data.countrySlug}/${data.jobSlug}/${type}`;
-const tweetText = encodeURIComponent(`Verified telemetry: ${data.jobTitle}s index at $${data.localSalary.toLocaleString()}/mo in ${data.countryName}. View the statutory breakdown at EverywhereJob:`);
+const tweetText = encodeURIComponent(`Verified data: ${data.jobTitle}s average $${data.localSalary.toLocaleString()}/mo in ${data.countryName}. View the visa breakdown at EverywhereJob:`);
 
 const schema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": `${data.jobTitle} Salary & Visa Data in ${data.countryName}`,
-  "description": `System data and immigration variables for a ${data.jobTitle} moving to ${data.countryName}.`,
+  "description": `Relocation data and visa options for a ${data.jobTitle} moving to ${data.countryName}.`,
   "mainEntity": {
     "@type": "Article",
-    "headline": `Baseline ${data.jobTitle} Matrix in ${data.countryName}`,
+    "headline": `Average ${data.jobTitle} Salary in ${data.countryName}`,
     "author": { "@type": "Organization", "name": "EverywhereJob" }
   }
 };
@@ -47,8 +47,8 @@ const schema = {
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{data.jobTitle} Matrix: {data.countryName} | EverywhereJob</title>
-    <meta name="description" content={`Verified structural parameters for a ${data.jobTitle} relocating to ${data.countryName}.`} />
+    <title>{data.jobTitle} Guide: {data.countryName} | EverywhereJob</title>
+    <meta name="description" content={`Verified salary and visa data for a ${data.jobTitle} relocating to ${data.countryName}.`} />
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     
     <style>
@@ -64,7 +64,7 @@ const schema = {
       
       .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
       
-      .breadcrumb { font-size: 0.8rem; color: #71717a; margin-bottom: 1.5rem; font-family: monospace; }
+      .breadcrumb { font-size: 0.8rem; color: #71717a; margin-bottom: 1.5rem; }
       .breadcrumb a { color: #10b981; text-decoration: none; }
       .breadcrumb a:hover { text-decoration: underline; }
       .breadcrumb span { margin: 0 0.3rem; color: #3f3f46; }
@@ -127,77 +127,77 @@ const schema = {
     <div class="wrapper">
       <div class="card">
         <nav class="breadcrumb">
-          <a href="/">ROOT</a> <span>//</span> 
-          <a href={`/countries/${data.countrySlug}`}>{data.countryName.toUpperCase()}</a> <span>//</span> 
-          <a href={`/jobs/${data.jobSlug}`}>{data.jobTitle.toUpperCase()}</a> <span>//</span> 
-          {type === 'remote' ? 'REMOTE_NODE' : 'LOCAL_NODE'}
+          <a href="/">Home</a> <span>/</span> 
+          <a href={`/countries/${data.countrySlug}`}>{data.countryName}</a> <span>/</span> 
+          <a href={`/jobs/${data.jobSlug}`}>{data.jobTitle}</a> <span>/</span> 
+          {type === 'remote' ? 'Remote' : 'Local'}
         </nav>
 
         <img src={`https://images.unsplash.com/${selectedPhoto}?auto=format&fit=crop&w=800&q=80`} alt={data.countryName} class="hero-image" />
-        <h1>{data.jobTitle} Index: {data.countryName}</h1>
+        <h1>{data.jobTitle} Guide: {data.countryName}</h1>
         
         <nav class="toggle-container">
           {data.canWorkRemote !== false && (
-            <a href={`/countries/${data.countrySlug}/${data.jobSlug}/remote`} class={type === 'remote' ? 'active' : ''}>Remote Mode</a>
+            <a href={`/countries/${data.countrySlug}/${data.jobSlug}/remote`} class={type === 'remote' ? 'active' : ''}>Remote Worker</a>
           )}
-          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/local`} class={type === 'local' ? 'active' : ''}>Local Mode</a>
+          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/local`} class={type === 'local' ? 'active' : ''}>Local Hire</a>
         </nav>
 
         <main>
           {type === 'remote' ? (
             <div class="data-grid">
-              <div class="data-row"><span class="data-label">Base Living Index</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="data-label">Est. Remote Matrix</span><span class="data-value">${estRemoteSalary.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="data-label">Tax Protocol</span><span class="data-value">{data.nomadTax}</span></div>
-              <div class="data-row"><span class="data-label">Visa Protocol</span><span class="data-value">{data.nomadVisa}</span></div>
+              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Est. Remote Salary</span><span class="data-value">${estRemoteSalary.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Income Tax</span><span class="data-value">{data.nomadTax}</span></div>
+              <div class="data-row"><span class="data-label">Visa Option</span><span class="data-value">{data.nomadVisa}</span></div>
             </div>
           ) : (
             <div class="data-grid">
-              <div class="data-row"><span class="data-label">Base Living Index</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="data-label">Local Compensation</span><span class="data-value">${data.localSalary.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="data-label">Tax Protocol</span><span class="data-value">{localTaxDisplay}</span></div>
-              <div class="data-row"><span class="data-label">Visa Protocol</span><span class="data-value">{data.localVisa}</span></div>
+              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Local Salary</span><span class="data-value">${data.localSalary.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Income Tax</span><span class="data-value">{localTaxDisplay}</span></div>
+              <div class="data-row"><span class="data-label">Visa Option</span><span class="data-value">{data.localVisa}</span></div>
             </div>
           )}
         </main>
 
         <section class="difficulty-box" style={`--accent-color: ${marketFriction.color}`}>
-          <h3 style={`margin: 0 0 0.25rem 0; color: ${marketFriction.color}; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;`}>Friction Level: {marketFriction.level}</h3>
+          <h3 style={`margin: 0 0 0.25rem 0; color: ${marketFriction.color}; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;`}>Market Difficulty: {marketFriction.level}</h3>
           <p style="margin: 0; color: #a1a1aa; font-size: 0.9rem;">{marketFriction.text}</p>
         </section>
 
         <div class="social-share">
-          <span>Export Matrix Data:</span>
+          <span>Share this data:</span>
           <div style="display: flex; gap: 0.5rem;">
-            <a href={`https://twitter.com/intent/tweet?text=${tweetText}&url=${shareUrl}`} target="_blank" rel="noopener noreferrer" class="share-btn btn-twitter">X Network</a>
-            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`} target="_blank" rel="noopener noreferrer" class="share-btn btn-linkedin">LinkedIn Node</a>
+            <a href={`https://twitter.com/intent/tweet?text=${tweetText}&url=${shareUrl}`} target="_blank" rel="noopener noreferrer" class="share-btn btn-twitter">Post to X</a>
+            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`} target="_blank" rel="noopener noreferrer" class="share-btn btn-linkedin">Share on LinkedIn</a>
           </div>
         </div>
 
         <section class="search-card">
           <div style="flex: 1; min-width: 200px;">
-            <h3 style="margin:0 0 0.25rem 0; font-size: 1rem;">Query Open Telemetry</h3>
-            <p style="margin:0; font-size:0.85rem; color:#a1a1aa;">Active {data.jobTitle} parameters in {data.countryName}.</p>
+            <h3 style="margin:0 0 0.25rem 0; font-size: 1rem;">Find Open Roles</h3>
+            <p style="margin:0; font-size:0.85rem; color:#a1a1aa;">Active {data.jobTitle} openings in {data.countryName}.</p>
           </div>
           <div style="display:flex; gap:0.5rem; flex-wrap: wrap;">
             {data.nicheJobBoardName && data.nicheJobBoardUrl && (
               <a href={data.nicheJobBoardUrl} target="_blank" class="search-btn niche-btn">{data.nicheJobBoardName}</a>
             )}
-            <a href={`https://www.linkedin.com/jobs/search/?keywords=${data.jobTitle}&location=${data.countryName}`} target="_blank" class="search-btn">LinkedIn API</a>
-            <a href={`https://www.google.com/search?q=${data.jobTitle}+jobs+in+${data.countryName}`} target="_blank" class="search-btn">Google API</a>
+            <a href={`https://www.linkedin.com/jobs/search/?keywords=${data.jobTitle}&location=${data.countryName}`} target="_blank" class="search-btn">LinkedIn</a>
+            <a href={`https://www.google.com/search?q=${data.jobTitle}+jobs+in+${data.countryName}`} target="_blank" class="search-btn">Google</a>
           </div>
         </section>
 
         <section class="portal-card">
           <div style="flex: 1; min-width: 200px;">
-            <h3 style="margin:0 0 0.25rem 0; color:#10b981; font-size: 1rem;">State Authorization</h3>
-            <p style="margin:0; font-size:0.85rem; color:#a1a1aa;">Access statutory clearance modules.</p>
+            <h3 style="margin:0 0 0.25rem 0; color:#10b981; font-size: 1rem;">Official Portal</h3>
+            <p style="margin:0; font-size:0.85rem; color:#a1a1aa;">Use official government resources to apply.</p>
           </div>
           <a href={data.visaLink} target="_blank" class="portal-btn">Access Portal ↗</a>
         </section>
 
         <section class="context-box">
-          <h2>Operational Context</h2>
+          <h2>Living in {data.countryName}</h2>
           <p style="color: #a1a1aa; font-size: 0.95rem;">{data.localContext}</p>
         </section>
       </div>
@@ -205,11 +205,11 @@ const schema = {
 
     <footer class="contact-pane">
       <div class="contact-container">
-        <h2>Data Discrepancy Reporting</h2>
+        <h2>Report Outdated Data</h2>
         <form action="https://formspree.io/f/xgobqeky" method="POST" class="contact-form">
-          <input type="email" name="email" placeholder="Verification Email" required />
-          <textarea name="message" rows="4" placeholder="Log details..." required></textarea>
-          <button type="submit">Submit Log</button>
+          <input type="email" name="email" placeholder="Your Email" required />
+          <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
+          <button type="submit">Send Message</button>
         </form>
       </div>
     </footer>
