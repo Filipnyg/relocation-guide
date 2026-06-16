@@ -5,12 +5,12 @@ export async function getStaticPaths() {
   const paths = [];
   data.forEach((row) => {
     paths.push({
-      params: { country: row.countrySlug, job: row.jobSlug, persona: 'nomad' },
-      props: { data: row, type: 'nomad' },
+      params: { country: row.countrySlug, job: row.jobSlug, persona: 'remote' },
+      props: { data: row, type: 'remote' },
     });
     paths.push({
-      params: { country: row.countrySlug, job: row.jobSlug, persona: 'expat' },
-      props: { data: row, type: 'expat' },
+      params: { country: row.countrySlug, job: row.jobSlug, persona: 'local' },
+      props: { data: row, type: 'local' },
     });
   });
   return paths;
@@ -72,12 +72,46 @@ const localTaxDisplay = data.countryName === 'United Arab Emirates' ? '0% Person
         <img src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80&sig=${data.countrySlug}`} alt={data.countryName} class="hero-image" />
         <h1>{data.jobTitle} Salary & Visa Guide in {data.countryName}</h1>
         <nav class="toggle-container">
-          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/nomad`} class={type === 'nomad' ? 'active' : ''}>Remote Worker (Nomad)</a>
-          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/expat`} class={type === 'expat' ? 'active' : ''}>Local Hire (Expat)</a>
+          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/remote`} class={type === 'remote' ? 'active' : ''}>Remote Worker</a>
+          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/local`} class={type === 'local' ? 'active' : ''}>Local Hire</a>
         </nav>
 
         <main>
-          {type === 'nomad' ? (
+          {type === 'remote' ? (
             <div class="data-grid">
               <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="
+              <div class="data-row"><span class="data-label">Est. Remote Salary</span><span class="data-value">${estRemoteSalary.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Remote Income Tax</span><span class="data-value">{data.nomadTax}</span></div>
+              <div class="data-row"><span class="data-label">Visa Option</span><span class="data-value">{data.nomadVisa}</span></div>
+            </div>
+          ) : (
+            <div class="data-grid">
+              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Avg. Local Salary</span><span class="data-value">${data.localSalary.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Local Income Tax</span><span class="data-value">{localTaxDisplay}</span></div>
+              <div class="data-row"><span class="data-label">Visa Option</span><span class="data-value">{data.localVisa}</span></div>
+            </div>
+          )}
+        </main>
+
+        <section class="search-card">
+          <div><h3>Find Open Roles</h3><p>Active {data.jobTitle} openings in {data.countryName}.</p></div>
+          <div style="display:flex; gap:0.5rem;">
+            <a href={`https://www.linkedin.com/jobs/search/?keywords=${data.jobTitle}&location=${data.countryName}`} target="_blank" class="search-btn">LinkedIn</a>
+            <a href={`https://www.google.com/search?q=${data.jobTitle}+jobs+in+${data.countryName}`} target="_blank" class="search-btn">Google</a>
+          </div>
+        </section>
+
+        <section class="portal-card">
+          <div><h3>Official Portal</h3><p>Use government resources to apply.</p></div>
+          <a href={data.visaLink} target="_blank" class="portal-btn">Visit Immigration →</a>
+        </section>
+
+        <section class="context-box">
+          <h2>Living in {data.countryName}</h2>
+          <p>{data.localContext}</p>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

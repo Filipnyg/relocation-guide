@@ -48,7 +48,7 @@ const availableCountries = data
         <ul class="link-list">
           {availableCountries.map(c => (
             <li>
-              <a href={`/countries/${c.countrySlug}/${job}/nomad`}>
+              <a href={/countries/${c.countrySlug}/${job}/remote}>
                 <div>
                   <span style="display:block; font-size: 1.1rem;">{c.countryName}</span>
                   <a href={`https://www.google.com/search?q=${jobTitle}+jobs+in+${c.countryName}`} target="_blank" style="font-size: 0.8rem; color: #16a34a; text-decoration: underline;">Browse local openings →</a>

@@ -1,7 +1,6 @@
 ---
 import data from '../data.json';
 
-
 // --- DIRECTORY LOGIC ---
 const countries = [...new Set(data.map(item => item.countryName))].sort();
 const jobs = [...new Set(data.map(item => item.jobTitle))].sort();
@@ -39,35 +38,12 @@ const topQualityOfLife = uniqueCountriesData
     <meta name="google-site-verification" content="EK2aLb4_ZKCvOfSWETXcFD-0_YOvd2vb-Zr16AsYQb4" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EverywhereJob - Global Relocation, Visa & Salary Guides</title>
-    <meta name="description" content="Explore programmatic relocation guides for remote workers and expats across 40 countries and dozens of specialized tech roles." />
+    <meta name="description" content="Compare verified salaries, living costs, and visa requirements for tech roles across 40 countries." />
     
     <style>
-      body { 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-        background-color: #f4f4f5; 
-        color: #3f3f46; 
-        line-height: 1.6; 
-        padding: 0 0 4rem 0;
-        margin: 0;
-      }
-      .site-header {
-        background: #ffffff;
-        border-bottom: 1px solid #e4e4e7;
-        padding: 1.25rem 1.5rem;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        margin-bottom: 3rem;
-      }
-      .header-container {
-        max-width: 900px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        text-decoration: none;
-        transition: opacity 0.2s;
-      }
+      body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f4f4f5; color: #3f3f46; line-height: 1.6; padding: 0 0 4rem 0; margin: 0; }
+      .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
+      .header-container { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: opacity 0.2s; }
       .header-container:hover { opacity: 0.8; }
       .logo-icon { font-size: 1.3rem; }
       .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
@@ -77,36 +53,17 @@ const topQualityOfLife = uniqueCountriesData
       .hero-intro h1 { font-size: 2.5rem; color: #18181b; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
       .hero-intro p { font-size: 1.15rem; color: #71717a; max-width: 600px; margin: 0 auto; }
       .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
-      .card { 
-        background: #ffffff; 
-        border-radius: 20px; 
-        padding: 2.5rem; 
-        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); 
-        border: 1px solid #e4e4e7;
-      }
-      .card h2 { 
-        font-size: 1.35rem; color: #18181b; margin-top: 0; margin-bottom: 1.5rem;
-        font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.5rem;
-      }
+      .card { background: #ffffff; border-radius: 20px; padding: 2.5rem; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); border: 1px solid #e4e4e7; }
+      .card h2 { font-size: 1.35rem; color: #18181b; margin-top: 0; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.5rem; }
       .leaderboard-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .leaderboard-list li a {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 0.85rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px;
-        color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease;
-      }
+      .leaderboard-list li a { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease; }
       .leaderboard-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
       .stat-badge { background: #e2e8f0; color: #334155; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; }
       .leaderboard-list li a:hover .stat-badge { background: #dcfce7; color: #15803d; }
       .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .link-list li a {
-        display: block; padding: 0.75rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px;
-        color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease;
-      }
+      .link-list li a { display: block; padding: 0.75rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease; }
       .link-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateX(2px); }
-      @media (max-width: 768px) {
-        .grid-2 { grid-template-columns: 1fr; }
-        .hero-intro h1 { font-size: 2rem; }
-      }
+      @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .hero-intro h1 { font-size: 2rem; } }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8713635738444412" crossorigin="anonymous"></script>
   </head>
@@ -121,9 +78,10 @@ const topQualityOfLife = uniqueCountriesData
     <div class="wrapper">
       <section class="hero-intro">
         <h1>Find Your Next Target Move</h1>
-        <p>Explore programmatic relocation guides for remote workers and expats across 40 countries and dozens of specialized tech roles.</p>
+        <p>Compare tech salaries, living costs, and visa requirements across 40 countries. Real data to help you plan your next international move.</p>
       </section>
 
+      <!-- GLOBAL INSIGHTS -->
       <section class="grid-2">
         <div class="card">
           <h2><span>📈</span> Top Paying Markets</h2>
@@ -154,6 +112,7 @@ const topQualityOfLife = uniqueCountriesData
         </div>
       </section>
 
+      <!-- MAIN DIRECTORIES -->
       <main class="grid-2">
         <div class="card">
           <h2><span>🌍</span> Explore By Country</h2>

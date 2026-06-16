@@ -52,7 +52,7 @@ const availableJobs = data
         <ul class="link-list">
           {availableJobs.map(job => (
             <li>
-              <a href={`/countries/${country}/${job.jobSlug}/nomad`}>
+              <a href={/countries/${country}/${job.jobSlug}/remote}>
                 <div>
                   <span style="display:block; font-size: 1.1rem;">{job.jobTitle}</span>
                   <a href={`https://www.linkedin.com/jobs/search/?keywords=${job.jobTitle}&location=${countryName}`} target="_blank" style="font-size: 0.8rem; color: #16a34a; text-decoration: underline;">Find {job.jobTitle} jobs in {countryName} →</a>
