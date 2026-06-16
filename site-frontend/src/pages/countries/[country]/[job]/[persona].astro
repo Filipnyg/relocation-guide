@@ -18,23 +18,33 @@ export async function getStaticPaths() {
 
 const { data, type } = Astro.props;
 
-// A diverse collection of 20 high-quality Unsplash scenery/cityscape IDs
-const photoIds = [
-  "photo-1506744038136-46273834b3fb", "photo-1517736996458-ee3bc867a145",
-  "photo-1513622470522-26c3c8a854bc", "photo-1527004013197-933c4bb611b3",
-  "photo-1528154291023-a6525fabb169", "photo-1523482596083-d46196c3365f",
-  "photo-1543783207-ec64e4d95325", "photo-1467269204594-9661b134dd2b",
-  "photo-1513635269975-59663e0ca1ad", "photo-1501594907352-04cda38ebc29",
-  "photo-1507608869274-d3177c8bb4c7", "photo-1493976040374-85c8e12f0c0e",
-  "photo-1525625293386-3f8f99389edd", "photo-1502602898657-3e91760cbb34",
-  "photo-1498050108023-c5249f4df085", "photo-1508009603885-50cf7c579365",
-  "photo-1476514525535-07fb3b4ae5f1", "photo-1504150558240-0b4fd8946624",
-  "photo-1512453979798-5ea266f8880c", "photo-1480796927426-f609979314bd"
-];
+// Direct 1-to-1 mapping of countries to their actual Unsplash photos
+const photoMap = {
+  "switzerland": "photo-1528127269322-539801943592",
+  "netherlands": "photo-1517736996458-ee3bc867a145",
+  "denmark": "photo-1513622470522-26c3c8a854bc",
+  "norway": "photo-1527004013197-933c4bb611b3",
+  "finland": "photo-1528154291023-a6525fabb169",
+  "australia": "photo-1523482596083-d46196c3365f",
+  "spain": "photo-1543783207-ec64e4d95325",
+  "germany": "photo-1467269204594-9661b134dd2b",
+  "united-kingdom": "photo-1513635269975-59663e0ca1ad",
+  "united-states": "photo-1501594907352-04cda38ebc29",
+  "canada": "photo-1507608869274-d3177c8bb4c7",
+  "japan": "photo-1493976040374-85c8e12f0c0e",
+  "singapore": "photo-1525625293386-3f8f99389edd",
+  "france": "photo-1502602898657-3e91760cbb34",
+  "italy": "photo-1498050108023-c5249f4df085",
+  "brazil": "photo-1483729558449-99ef09a8c325",
+  "argentina": "photo-1589909202802-8f4aadce1849",
+  "united-arab-emirates": "photo-1512453979798-5ea266f8880c",
+  "mexico": "photo-1518105779142-d975f22f1b0a",
+  "thailand": "photo-1508009603885-50cf7c579365"
+};
 
-// Creates a unique but consistent number from the country's name to assign a varied photo
-const charSum = data.countryName.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-const selectedPhoto = photoIds[charSum % photoIds.length];
+// Use the mapped photo, OR fallback to a generic travel/airplane image if the country isn't in the list above
+const genericFallbackPhoto = "photo-1436491865332-7a61a109cc05"; 
+const selectedPhoto = photoMap[data.countrySlug] || genericFallbackPhoto;
 
 // Market Entry Friction Engine
 const getDifficultyRating = (salary, country) => {
