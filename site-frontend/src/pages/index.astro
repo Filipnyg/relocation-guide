@@ -17,6 +17,13 @@ const topPayingMarkets = Array.from(
 const qolScores = { "switzerland": 96, "netherlands": 95, "denmark": 95, "norway": 94, "finland": 94, "iceland": 93, "australia": 93, "new-zealand": 92, "sweden": 92, "germany": 91, "ireland": 90, "estonia": 89, "canada": 89, "japan": 88, "singapore": 88, "united-states": 87, "united-kingdom": 86, "spain": 85, "france": 84, "portugal": 84 };
 const uniqueCountriesData = Array.from(new Map(data.map(item => [item.countryName, { name: item.countryName, slug: item.countrySlug }])).values());
 const topQualityOfLife = uniqueCountriesData.map(c => ({ ...c, score: qolScores[c.slug] || 70 })).sort((a, b) => b.score - a.score).slice(0, 5);
+
+// --- SEARCH DATA ENGINE ---
+// We compile all possible pages into a single array for the live autocomplete
+const searchData = [
+  ...countries.map(c => ({ name: c, url: `/countries/${getCountrySlug(c)}`, type: 'Country' })),
+  ...jobs.map(j => ({ name: j, url: `/jobs/${getJobSlug(j)}`, type: 'Profession' }))
+];
 ---
 <html lang="en">
   <head>
@@ -45,10 +52,17 @@ const topQualityOfLife = uniqueCountriesData.map(c => ({ ...c, score: qolScores[
       .hero-intro h1 { font-size: 2.5rem; color: #18181b; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
       .hero-intro p { font-size: 1.15rem; color: #71717a; max-width: 600px; margin: 0 auto; }
       
+      /* --- SEARCH BAR & DROPDOWN STYLES --- */
       .search-container { max-width: 600px; margin: 0 auto 3rem auto; position: relative; }
       .search-container input { width: 100%; padding: 1.25rem 1.5rem 1.25rem 3rem; font-size: 1.1rem; border-radius: 12px; border: 1px solid #e4e4e7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); outline: none; box-sizing: border-box; transition: all 0.2s; }
-      .search-container input:focus { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1); }
-      .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.2rem; opacity: 0.5; }
+      .search-container input:focus { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+      .search-icon { position: absolute; left: 1rem; top: 1.25rem; font-size: 1.2rem; opacity: 0.5; }
+      
+      .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1px solid #e4e4e7; border-top: none; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); z-index: 50; max-height: 300px; overflow-y: auto; display: none; }
+      .search-dropdown a { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; color: #27272a; text-decoration: none; border-bottom: 1px solid #f4f4f5; transition: background 0.1s; }
+      .search-dropdown a:last-child { border-bottom: none; }
+      .search-dropdown a:hover { background: #f0fdf4; color: #16a34a; }
+      .type-badge { font-size: 0.75rem; background: #e4e4e7; color: #52525b; padding: 0.2rem 0.5rem; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
       
       .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
       .card { background: #ffffff; border-radius: 20px; padding: 2.5rem; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); border: 1px solid #e4e4e7; }
@@ -93,9 +107,11 @@ const topQualityOfLife = uniqueCountriesData.map(c => ({ ...c, score: qolScores[
         <p>Compare tech salaries, living costs, and visa requirements across 40 countries. Real data to help you plan your next international move.</p>
       </section>
 
+      <!-- LIVE SEARCH COMPONENT -->
       <div class="search-container">
         <span class="search-icon">🔍</span>
-        <input type="text" id="directorySearch" placeholder="Search for a country or role (e.g., 'Spain' or 'Data')..." />
+        <input type="text" id="directorySearch" placeholder="Search for a country or role (e.g., 'Spain' or 'Data')..." autocomplete="off" />
+        <div id="searchResults" class="search-dropdown"></div>
       </div>
 
       <section class="grid-2">
@@ -152,17 +168,52 @@ const topQualityOfLife = uniqueCountriesData.map(c => ({ ...c, score: qolScores[
       </div>
     </footer>
 
-    <script>
+    <!-- Instant Search & Autocomplete Logic -->
+    <script define:vars={{ searchData }}>
       document.addEventListener('DOMContentLoaded', () => {
         const searchInput = document.getElementById('directorySearch');
+        const searchResults = document.getElementById('searchResults');
         const listItems = document.querySelectorAll('.filterable-list li');
 
         searchInput.addEventListener('input', (e) => {
-          const term = (e.target as HTMLInputElement).value.toLowerCase();
+          const term = e.target.value.toLowerCase().trim();
+          
+          // 1. Filter the large lists at the bottom of the page
           listItems.forEach(li => {
             const text = li.textContent.toLowerCase();
             li.style.display = text.includes(term) ? 'block' : 'none';
           });
+
+          // 2. Control the Live Dropdown
+          if (term.length < 1) {
+            searchResults.style.display = 'none';
+            return;
+          }
+
+          // Find matches in our dataset
+          const matches = searchData.filter(item => item.name.toLowerCase().includes(term));
+          
+          if (matches.length > 0) {
+            // Render the top 6 matches into the dropdown window
+            searchResults.innerHTML = matches.slice(0, 6).map(match => `
+              <a href="${match.url}">
+                <strong>${match.name}</strong> 
+                <span class="type-badge">${match.type}</span>
+              </a>
+            `).join('');
+            searchResults.style.display = 'block';
+          } else {
+            // Show "No Results" state
+            searchResults.innerHTML = `<div style="padding: 1rem 1.5rem; color: #a1a1aa; font-style: italic;">No exact matches found for "${term}"</div>`;
+            searchResults.style.display = 'block';
+          }
+        });
+
+        // Hide the dropdown if the user clicks anywhere else on the page
+        document.addEventListener('click', (e) => {
+          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
+          }
         });
       });
     </script>
