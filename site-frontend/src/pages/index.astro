@@ -59,10 +59,12 @@ const searchData = [
       .search-icon { position: absolute; left: 1rem; top: 1.25rem; font-size: 1.2rem; opacity: 0.5; }
       
       .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1px solid #e4e4e7; border-top: none; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); z-index: 50; max-height: 300px; overflow-y: auto; display: none; }
-      .search-dropdown a { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; color: #27272a; text-decoration: none; border-bottom: 1px solid #f4f4f5; transition: background 0.1s; }
-      .search-dropdown a:last-child { border-bottom: none; }
-      .search-dropdown a:hover { background: #f0fdf4; color: #16a34a; }
-      .type-badge { font-size: 0.75rem; background: #e4e4e7; color: #52525b; padding: 0.2rem 0.5rem; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+      
+      /* We use :global() here so Astro applies it to the Javascript-injected links */
+      :global(.search-dropdown a) { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; color: #27272a !important; text-decoration: none !important; border-bottom: 1px solid #f4f4f5; transition: background 0.1s; font-size: 1.05rem; }
+      :global(.search-dropdown a:last-child) { border-bottom: none; }
+      :global(.search-dropdown a:hover) { background: #f0fdf4; color: #16a34a !important; }
+      :global(.type-badge) { font-size: 0.75rem; background: #e4e4e7; color: #52525b; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
       
       .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
       .card { background: #ffffff; border-radius: 20px; padding: 2.5rem; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); border: 1px solid #e4e4e7; }
