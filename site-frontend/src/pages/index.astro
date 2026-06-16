@@ -19,7 +19,6 @@ const uniqueCountriesData = Array.from(new Map(data.map(item => [item.countryNam
 const topQualityOfLife = uniqueCountriesData.map(c => ({ ...c, score: qolScores[c.slug] || 70 })).sort((a, b) => b.score - a.score).slice(0, 5);
 
 // --- SEARCH DATA ENGINE ---
-// We compile all possible pages into a single array for the live autocomplete
 const searchData = [
   ...countries.map(c => ({ name: c, url: `/countries/${getCountrySlug(c)}`, type: 'Country' })),
   ...jobs.map(j => ({ name: j, url: `/jobs/${getJobSlug(j)}`, type: 'Profession' }))
@@ -34,66 +33,63 @@ const searchData = [
     <meta name="description" content="Compare verified salaries, living costs, and visa requirements for tech roles across 40 countries." />
     
     <style>
-      body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f4f4f5; color: #3f3f46; line-height: 1.6; margin: 0; padding-bottom: 0; }
-      .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #09090b; color: #e4e4e7; line-height: 1.5; margin: 0; padding-bottom: 0; }
+      .site-header { background: #18181b; border-bottom: 1px solid #27272a; padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
       .header-container { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: opacity 0.2s; }
-      .logo-link:hover { opacity: 0.8; }
-      .logo-icon { font-size: 1.3rem; }
-      .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
-      .logo-highlight { color: #16a34a; }
-      .nav-text-link { color: #71717a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.2s; }
-      .nav-text-link:hover { color: #18181b; }
-      .get-started-btn { background: #16a34a; color: white; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
-      .get-started-btn:hover { background: #15803d; }
+      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+      .logo-text { font-weight: 700; font-size: 1.1rem; color: #ffffff; letter-spacing: -0.02em; text-transform: uppercase; }
+      .logo-highlight { color: #10b981; }
+      .nav-text-link { color: #a1a1aa; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.15s; }
+      .nav-text-link:hover { color: #ffffff; }
+      .get-started-btn { background: #10b981; color: #09090b; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: background 0.15s; }
+      .get-started-btn:hover { background: #059669; }
       
       .wrapper { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
-      .hero-intro { text-align: center; margin-bottom: 2rem; }
-      .hero-intro h1 { font-size: 2.5rem; color: #18181b; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
-      .hero-intro p { font-size: 1.15rem; color: #71717a; max-width: 600px; margin: 0 auto; }
+      .hero-intro { text-align: center; margin-bottom: 3rem; }
+      .hero-intro h1 { font-size: 2.25rem; color: #ffffff; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+      .hero-intro p { font-size: 1.05rem; color: #a1a1aa; max-width: 550px; margin: 0 auto; }
       
-      /* --- SEARCH BAR & DROPDOWN STYLES --- */
-      .search-container { max-width: 600px; margin: 0 auto 3rem auto; position: relative; }
-      .search-container input { width: 100%; padding: 1.25rem 1.5rem 1.25rem 3rem; font-size: 1.1rem; border-radius: 12px; border: 1px solid #e4e4e7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); outline: none; box-sizing: border-box; transition: all 0.2s; }
-      .search-container input:focus { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
-      .search-icon { position: absolute; left: 1rem; top: 1.25rem; font-size: 1.2rem; opacity: 0.5; }
+      .search-container { max-width: 600px; margin: 0 auto 4rem auto; position: relative; }
+      .search-container input { width: 100%; padding: 1rem 1.25rem 1rem 2.5rem; font-size: 1rem; background: #18181b; color: #ffffff; border-radius: 6px; border: 1px solid #27272a; outline: none; box-sizing: border-box; transition: border-color 0.15s; }
+      .search-container input:focus { border-color: #10b981; }
+      .search-icon { position: absolute; left: 0.85rem; top: 1.05rem; font-size: 0.95rem; color: #a1a1aa; }
       
-      .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1px solid #e4e4e7; border-top: none; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); z-index: 50; max-height: 300px; overflow-y: auto; display: none; }
+      .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #18181b; border: 1px solid #27272a; border-top: none; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 50; max-height: 300px; overflow-y: auto; display: none; }
       
-      /* We use :global() here so Astro applies it to the Javascript-injected links */
-      :global(.search-dropdown a) { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; color: #27272a !important; text-decoration: none !important; border-bottom: 1px solid #f4f4f5; transition: background 0.1s; font-size: 1.05rem; }
+      :global(.search-dropdown a) { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.25rem; color: #e4e4e7 !important; text-decoration: none !important; border-bottom: 1px solid #27272a; font-size: 0.95rem; }
       :global(.search-dropdown a:last-child) { border-bottom: none; }
-      :global(.search-dropdown a:hover) { background: #f0fdf4; color: #16a34a !important; }
-      :global(.type-badge) { font-size: 0.75rem; background: #e4e4e7; color: #52525b; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+      :global(.search-dropdown a:hover) { background: #27272a; color: #10b981 !important; }
+      :global(.type-badge) { font-size: 0.7rem; background: #09090b; color: #a1a1aa; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; text-transform: uppercase; border: 1px solid #27272a; }
+
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+      .card { background: #18181b; border-radius: 6px; padding: 2rem; border: 1px solid #27272a; }
+      .card h2 { font-size: 1.1rem; color: #ffffff; margin-top: 0; margin-bottom: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #27272a; padding-bottom: 0.75rem; }
       
-      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
-      .card { background: #ffffff; border-radius: 20px; padding: 2.5rem; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); border: 1px solid #e4e4e7; }
-      .card h2 { font-size: 1.35rem; color: #18181b; margin-top: 0; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.5rem; }
-      .leaderboard-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .leaderboard-list li a { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
-      .leaderboard-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateY(-2px); }
-      .stat-badge { background: #e2e8f0; color: #334155; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; }
-      .leaderboard-list li a:hover .stat-badge { background: #dcfce7; color: #15803d; }
-      .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .link-list li a { display: block; padding: 0.75rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
-      .link-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateX(2px); }
+      .leaderboard-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+      .leaderboard-list li a { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #09090b; border: 1px solid #27272a; border-radius: 4px; color: #e4e4e7; text-decoration: none; font-size: 0.9rem; transition: border-color 0.15s; }
+      .leaderboard-list li a:hover { border-color: #10b981; color: #ffffff; }
+      .stat-badge { background: #27272a; color: #a1a1aa; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+      .leaderboard-list li a:hover .stat-badge { color: #10b981; }
       
-      .contact-pane { background: #18181b; color: #ffffff; padding: 4rem 1.5rem; text-align: center; }
+      .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+      .link-list li a { display: block; padding: 0.75rem 1rem; background: #09090b; border: 1px solid #27272a; border-radius: 4px; color: #e4e4e7; text-decoration: none; font-size: 0.9rem; transition: border-color 0.15s; }
+      .link-list li a:hover { border-color: #10b981; color: #ffffff; }
+      
+      .contact-pane { background: #18181b; border-top: 1px solid #27272a; color: #e4e4e7; padding: 4rem 1.5rem; text-align: center; }
       .contact-container { max-width: 600px; margin: 0 auto; }
-      .contact-container h2 { margin-top: 0; font-size: 2rem; margin-bottom: 0.5rem; color: #ffffff; }
-      .contact-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
-      .contact-form input, .contact-form textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #3f3f46; background: #27272a; color: white; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; }
-      .contact-form input:focus, .contact-form textarea:focus { border-color: #16a34a; }
-      .contact-form button { background: #16a34a; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
-      .contact-form button:hover { background: #15803d; }
-      @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .hero-intro h1 { font-size: 2rem; } }
+      .contact-container h2 { margin-top: 0; font-size: 1.5rem; margin-bottom: 0.5rem; color: #ffffff; font-weight: 700; letter-spacing: -0.02em; }
+      .contact-form { display: flex; flex-direction: column; gap: 0.75rem; text-align: left; }
+      .contact-form input, .contact-form textarea { width: 100%; padding: 0.85rem; border-radius: 4px; border: 1px solid #27272a; background: #09090b; color: white; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; outline: none; }
+      .contact-form input:focus, .contact-form textarea:focus { border-color: #10b981; }
+      .contact-form button { background: #10b981; color: #09090b; border: none; padding: 0.85rem; border-radius: 4px; font-weight: 700; cursor: pointer; transition: background 0.15s; margin-top: 0.25rem; font-size: 0.95rem; }
+      .contact-form button:hover { background: #059669; }
+      @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .hero-intro h1 { font-size: 1.75rem; } }
     </style>
   </head>
   <body>
     <header class="site-header">
       <div class="header-container">
         <a href="/" class="logo-link">
-          <span class="logo-icon">💼</span>
           <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
         </a>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
@@ -105,31 +101,30 @@ const searchData = [
 
     <div class="wrapper">
       <section class="hero-intro">
-        <h1>Find Your Next Target Move</h1>
-        <p>Compare tech salaries, living costs, and visa requirements across 40 countries. Real data to help you plan your next international move.</p>
+        <h1>Global Relocation Index</h1>
+        <p>Verified structural parameters spanning engineering, architecture, and technology domains globally.</p>
       </section>
 
-      <!-- LIVE SEARCH COMPONENT -->
       <div class="search-container">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="directorySearch" placeholder="Search for a country or role (e.g., 'Spain' or 'Data')..." autocomplete="off" />
+        <span class="search-icon">//</span>
+        <input type="text" id="directorySearch" placeholder="Query location or profession matrix..." autocomplete="off" />
         <div id="searchResults" class="search-dropdown"></div>
       </div>
 
       <section class="grid-2">
         <div class="card">
-          <h2><span>📈</span> Top Paying Markets</h2>
+          <h2>Top Paying Markets</h2>
           <ul class="leaderboard-list">
             {topPayingMarkets.map((market) => (
-              <li><a href={`/countries/${market.countrySlug}`}><span>{market.countryName} Market Apex</span><span class="stat-badge">Up to ${market.localSalary.toLocaleString()} / mo</span></a></li>
+              <li><a href={`/countries/${market.countrySlug}`}><span>{market.countryName} Apex</span><span class="stat-badge">${market.localSalary.toLocaleString()} / mo</span></a></li>
             ))}
           </ul>
         </div>
         <div class="card">
-          <h2><span>🌟</span> Highest Quality of Life</h2>
+          <h2>Quality of Life Index</h2>
           <ul class="leaderboard-list">
             {topQualityOfLife.map((country) => (
-              <li><a href={`/countries/${country.slug}`}><span>{country.name}</span><span class="stat-badge">Score: {country.score}/100</span></a></li>
+              <li><a href={`/countries/${country.slug}`}><span>{country.name}</span><span class="stat-badge">Index: {country.score}/100</span></a></li>
             ))}
           </ul>
         </div>
@@ -137,18 +132,18 @@ const searchData = [
 
       <main class="grid-2">
         <div class="card">
-          <h2><span>🌍</span> Explore By Country</h2>
+          <h2>Geographic Nodes</h2>
           <ul class="link-list filterable-list">
             {countries.map((countryName) => (
-              <li><a href={`/countries/${getCountrySlug(countryName)}`}>{countryName} Guides →</a></li>
+              <li><a href={`/countries/${getCountrySlug(countryName)}`}>{countryName}</a></li>
             ))}
           </ul>
         </div>
         <div class="card">
-          <h2><span>👨‍💻</span> Explore By Profession</h2>
+          <h2>Professional Roles</h2>
           <ul class="link-list filterable-list">
             {jobs.map((jobTitle) => (
-              <li><a href={`/jobs/${getJobSlug(jobTitle)}`}>{jobTitle} Jobs →</a></li>
+              <li><a href={`/jobs/${getJobSlug(jobTitle)}`}>{jobTitle}</a></li>
             ))}
           </ul>
         </div>
@@ -157,20 +152,19 @@ const searchData = [
 
     <footer class="contact-pane">
       <div class="contact-container">
-        <h2>Get in Touch</h2>
-        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 1.05rem;">Have questions about a market or want to report outdated data? Drop us a line.</p>
+        <h2>Data Discrepancy Reporting</h2>
+        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 0.95rem;">System validation logs refresh quarterly. Submit manual telemetry adjustments below.</p>
         
         <form action="https://formspree.io/f/xgobqeky" method="POST" class="contact-form">
-          <input type="email" name="email" placeholder="Your Email Address" required />
-          <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
-          <button type="submit">Send Message</button>
+          <input type="email" name="email" placeholder="Verification Email" required />
+          <textarea name="message" rows="4" placeholder="Log details or amendments..." required></textarea>
+          <button type="submit">Submit Log</button>
         </form>
         
-        <p style="margin-top: 3rem; font-size: 0.8rem; color: #52525b;">EverywhereJob — Data compiled quarterly from Numbeo cost thresholds and local statutory immigration statistics.</p>
+        <p style="margin-top: 3rem; font-size: 0.75rem; color: #52525b; font-family: monospace;">EverywhereJob v2.4.0 — Compiled from static statutory registries and international payroll logs.</p>
       </div>
     </footer>
 
-    <!-- Instant Search & Autocomplete Logic -->
     <script define:vars={{ searchData }}>
       document.addEventListener('DOMContentLoaded', () => {
         const searchInput = document.getElementById('directorySearch');
@@ -180,23 +174,19 @@ const searchData = [
         searchInput.addEventListener('input', (e) => {
           const term = e.target.value.toLowerCase().trim();
           
-          // 1. Filter the large lists at the bottom of the page
           listItems.forEach(li => {
             const text = li.textContent.toLowerCase();
             li.style.display = text.includes(term) ? 'block' : 'none';
           });
 
-          // 2. Control the Live Dropdown
           if (term.length < 1) {
             searchResults.style.display = 'none';
             return;
           }
 
-          // Find matches in our dataset
           const matches = searchData.filter(item => item.name.toLowerCase().includes(term));
           
           if (matches.length > 0) {
-            // Render the top 6 matches into the dropdown window
             searchResults.innerHTML = matches.slice(0, 6).map(match => `
               <a href="${match.url}">
                 <strong>${match.name}</strong> 
@@ -205,13 +195,11 @@ const searchData = [
             `).join('');
             searchResults.style.display = 'block';
           } else {
-            // Show "No Results" state
-            searchResults.innerHTML = `<div style="padding: 1rem 1.5rem; color: #a1a1aa; font-style: italic;">No exact matches found for "${term}"</div>`;
+            searchResults.innerHTML = `<div style="padding: 0.85rem 1.25rem; color: #52525b; font-style: italic; font-size: 0.9rem;">No nodes match query string</div>`;
             searchResults.style.display = 'block';
           }
         });
 
-        // Hide the dropdown if the user clicks anywhere else on the page
         document.addEventListener('click', (e) => {
           if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
             searchResults.style.display = 'none';

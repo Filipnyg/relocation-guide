@@ -4,7 +4,9 @@ import data from '../../../../data.json';
 export async function getStaticPaths() {
   const paths = [];
   data.forEach((row) => {
-    paths.push({ params: { country: row.countrySlug, job: row.jobSlug, persona: 'remote' }, props: { data: row, type: 'remote' }});
+    if (row.canWorkRemote !== false) {
+      paths.push({ params: { country: row.countrySlug, job: row.jobSlug, persona: 'remote' }, props: { data: row, type: 'remote' }});
+    }
     paths.push({ params: { country: row.countrySlug, job: row.jobSlug, persona: 'local' }, props: { data: row, type: 'local' }});
   });
   return paths;
@@ -12,117 +14,107 @@ export async function getStaticPaths() {
 
 const { data, type } = Astro.props;
 
-// Photo Map
 const photoMap = { "switzerland": "photo-1528127269322-539801943592", "netherlands": "photo-1517736996458-ee3bc867a145", "denmark": "photo-1513622470522-26c3c8a854bc", "norway": "photo-1527004013197-933c4bb611b3", "finland": "photo-1528154291023-a6525fabb169", "australia": "photo-1523482596083-d46196c3365f", "spain": "photo-1543783207-ec64e4d95325", "germany": "photo-1467269204594-9661b134dd2b", "united-kingdom": "photo-1513635269975-59663e0ca1ad", "united-states": "photo-1501594907352-04cda38ebc29", "canada": "photo-1507608869274-d3177c8bb4c7", "japan": "photo-1493976040374-85c8e12f0c0e", "singapore": "photo-1525625293386-3f8f99389edd", "france": "photo-1502602898657-3e91760cbb34", "italy": "photo-1498050108023-c5249f4df085", "brazil": "photo-1483729558449-99ef09a8c325", "argentina": "photo-1589909202802-8f4aadce1849", "united-arab-emirates": "photo-1512453979798-5ea266f8880c", "mexico": "photo-1518105779142-d975f22f1b0a", "thailand": "photo-1508009603885-50cf7c579365" };
 const genericFallbackPhoto = "photo-1436491865332-7a61a109cc05"; 
 const selectedPhoto = photoMap[data.countrySlug] || genericFallbackPhoto;
 
-// UI Calcs
 const getDifficultyRating = (salary, country) => {
   if (salary > 8000 || ["switzerland", "united-states", "singapore"].includes(country)) return { level: "High", color: "#ef4444", text: "Competitive market entry. Requires stringent visa sponsorship tracking." };
-  if (salary > 4500) return { level: "Moderate", color: "#f59e0b", text: "Standard professional criteria. Readily achievable for mid-to-senior profiles." };
-  return { level: "Accessible", color: "#10b981", text: "Highly welcoming pipeline with streamlined processing." };
+  if (salary > 4500) return { level: "Moderate", color: "#f59e0b", text: "Standard professional criteria. Readily achievable for verified profiles." };
+  return { level: "Accessible", color: "#10b981", text: "Highly welcoming pipeline with streamlined processing or high local demand." };
 };
 const marketFriction = getDifficultyRating(data.localSalary, data.countrySlug);
 const estRemoteSalary = data.localSalary > 4000 ? data.localSalary + 1500 : 5500 + (data.jobTitle.length * 100);
 const localTaxDisplay = data.countryName === 'United Arab Emirates' ? '0% Personal Income Tax' : 'Standard progressive local tax scales';
 
-// --- SEO & SOCIAL SHARING STRINGS ---
 const shareUrl = `https://everywherejob.com/countries/${data.countrySlug}/${data.jobSlug}/${type}`;
-const tweetText = encodeURIComponent(`Just found out ${data.jobTitle}s average $${data.localSalary.toLocaleString()}/mo in ${data.countryName}. Check out the visa and tax breakdown at EverywhereJob:`);
+const tweetText = encodeURIComponent(`Verified telemetry: ${data.jobTitle}s index at $${data.localSalary.toLocaleString()}/mo in ${data.countryName}. View the statutory breakdown at EverywhereJob:`);
 
-// Structured JSON-LD Schema for Google Search
 const schema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": `${data.jobTitle} Salary & Visa Guide in ${data.countryName}`,
-  "description": `Data and immigration guide for a ${data.jobTitle} looking to relocate or work remotely in ${data.countryName}.`,
+  "name": `${data.jobTitle} Salary & Visa Data in ${data.countryName}`,
+  "description": `System data and immigration variables for a ${data.jobTitle} moving to ${data.countryName}.`,
   "mainEntity": {
     "@type": "Article",
-    "headline": `Average ${data.jobTitle} Salary in ${data.countryName}`,
+    "headline": `Baseline ${data.jobTitle} Matrix in ${data.countryName}`,
     "author": { "@type": "Organization", "name": "EverywhereJob" }
   }
 };
 ---
-
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moving to {data.countryName} as a {data.jobTitle} | EverywhereJob</title>
-    <meta name="description" content={`A complete relocation guide for a ${data.jobTitle} moving to ${data.countryName}. Compare visa options, salaries, and tax rates.`} />
-    
+    <title>{data.jobTitle} Matrix: {data.countryName} | EverywhereJob</title>
+    <meta name="description" content={`Verified structural parameters for a ${data.jobTitle} relocating to ${data.countryName}.`} />
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     
     <style>
-      body { font-family: 'Inter', sans-serif; background-color: #f4f4f5; color: #3f3f46; line-height: 1.6; padding: 0; margin: 0; }
-      .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #09090b; color: #e4e4e7; line-height: 1.5; padding: 0; margin: 0; }
+      .site-header { background: #18181b; border-bottom: 1px solid #27272a; padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
       .header-container { max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: opacity 0.2s; }
-      .logo-link:hover { opacity: 0.8; }
-      .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
-      .logo-highlight { color: #16a34a; }
-      .nav-text-link { color: #71717a; text-decoration: none; font-weight: 600; font-size: 0.95rem; }
-      .nav-text-link:hover { color: #18181b; }
-      .get-started-btn { background: #16a34a; color: white; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+      .logo-text { font-weight: 700; font-size: 1.1rem; color: #ffffff; letter-spacing: -0.02em; text-transform: uppercase; }
+      .logo-highlight { color: #10b981; }
+      .nav-text-link { color: #a1a1aa; text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+      .nav-text-link:hover { color: #ffffff; }
+      .get-started-btn { background: #10b981; color: #09090b; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.85rem; }
       
       .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
       
-      /* BREADCRUMB */
-      .breadcrumb { font-size: 0.85rem; color: #71717a; margin-bottom: 1.5rem; }
-      .breadcrumb a { color: #16a34a; text-decoration: none; font-weight: 500; }
+      .breadcrumb { font-size: 0.8rem; color: #71717a; margin-bottom: 1.5rem; font-family: monospace; }
+      .breadcrumb a { color: #10b981; text-decoration: none; }
       .breadcrumb a:hover { text-decoration: underline; }
-      .breadcrumb span { margin: 0 0.4rem; color: #a1a1aa; }
+      .breadcrumb span { margin: 0 0.3rem; color: #3f3f46; }
 
-      .card { background: #ffffff; border-radius: 20px; padding: 3rem; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); border: 1px solid #e4e4e7; }
-      .hero-image { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; margin-bottom: 2rem; }
-      h1 { font-size: 2.2rem; color: #18181b; margin-top: 0; font-weight: 800; letter-spacing: -0.03em; }
+      .card { background: #18181b; border-radius: 6px; padding: 2.5rem; border: 1px solid #27272a; }
+      .hero-image { width: 100%; height: 240px; object-fit: cover; border-radius: 4px; margin-bottom: 2rem; filter: grayscale(20%) contrast(110%); }
+      h1 { font-size: 1.75rem; color: #ffffff; margin-top: 0; font-weight: 800; letter-spacing: -0.02em; }
       
-      .toggle-container { display: inline-flex; background: #f4f4f5; padding: 6px; border-radius: 14px; margin: 1.5rem 0; }
-      .toggle-container a { padding: 0.85rem 1.5rem; text-decoration: none; color: #71717a; font-weight: 600; border-radius: 10px; font-size: 0.95rem; }
-      .toggle-container a.active { background: #ffffff; color: #18181b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+      .toggle-container { display: inline-flex; background: #09090b; padding: 4px; border-radius: 6px; border: 1px solid #27272a; margin: 1.5rem 0; }
+      .toggle-container a { padding: 0.65rem 1.25rem; text-decoration: none; color: #a1a1aa; font-weight: 600; border-radius: 4px; font-size: 0.85rem; transition: all 0.15s; }
+      .toggle-container a.active { background: #18181b; color: #10b981; border: 1px solid #27272a; }
       
-      .data-grid { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
-      .data-row { display: flex; justify-content: space-between; padding: 1.25rem 1.5rem; background: #fafafa; border-radius: 12px; border: 1px solid #f4f4f5; align-items: center; }
-      .data-label { color: #71717a; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-      .data-value { font-weight: 700; color: #18181b; font-size: 1.1rem; text-align: right; }
+      .data-grid { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+      .data-row { display: flex; justify-content: space-between; padding: 1rem 1.25rem; background: #09090b; border-radius: 4px; border: 1px solid #27272a; align-items: center; }
+      .data-label { color: #a1a1aa; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+      .data-value { font-weight: 700; color: #ffffff; font-size: 1rem; text-align: right; }
       
-      .difficulty-box { margin-top: 2rem; padding: 1.5rem; border-radius: 12px; border-left: 5px solid var(--accent-color); background: #fafafa; }
+      .difficulty-box { margin-top: 2rem; padding: 1.25rem; border-radius: 4px; border-left: 4px solid var(--accent-color); background: #09090b; border-top: 1px solid #27272a; border-right: 1px solid #27272a; border-bottom: 1px solid #27272a; }
       
-      /* SOCIAL SHARE ROW */
-      .social-share { display: flex; align-items: center; gap: 1rem; margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid #e4e4e7; }
-      .social-share span { font-weight: 700; color: #18181b; font-size: 0.95rem; }
-      .share-btn { padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem; color: white; transition: opacity 0.2s; }
-      .share-btn:hover { opacity: 0.8; }
-      .btn-twitter { background: #0f1419; }
-      .btn-linkedin { background: #0a66c2; }
+      .social-share { display: flex; align-items: center; gap: 1rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid #27272a; }
+      .social-share span { font-weight: 600; color: #a1a1aa; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+      .share-btn { padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; color: white; }
+      .btn-twitter { background: #000000; border: 1px solid #27272a; }
+      .btn-linkedin { background: #0a66c2; border: 1px solid #0a66c2; }
       
-      .search-card { margin-top: 1rem; background: #ffffff; padding: 1.5rem; border-radius: 16px; border: 1px solid #e4e4e7; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-      .search-btn { background: #f4f4f5; color: #3f3f46; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem; }
+      .search-card { margin-top: 1.5rem; background: #09090b; padding: 1.5rem; border-radius: 6px; border: 1px solid #27272a; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .search-btn { background: #18181b; color: #e4e4e7; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border: 1px solid #27272a; transition: border-color 0.15s; }
+      .search-btn:hover { border-color: #10b981; color: #10b981; }
+      .niche-btn { background: #e4e4e7; color: #09090b; }
       
-      .portal-card { margin-top: 1rem; background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%); padding: 2rem; border-radius: 16px; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: space-between; }
-      .portal-btn { background: #16a34a; color: white; padding: 0.85rem 1.75rem; border-radius: 10px; text-decoration: none; font-weight: 600; }
+      .portal-card { margin-top: 1.5rem; background: #09090b; padding: 1.5rem; border-radius: 6px; border: 1px solid #10b981; border-left: 4px solid #10b981; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .portal-btn { background: #10b981; color: #09090b; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.9rem; }
       
-      .context-box { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #e4e4e7; }
-      .context-box h2 { font-size: 1.5rem; color: #18181b; margin-bottom: 1rem; }
+      .context-box { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #27272a; }
+      .context-box h2 { font-size: 1.25rem; color: #ffffff; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
       
-      .contact-pane { background: #18181b; color: #ffffff; padding: 4rem 1.5rem; text-align: center; }
+      .contact-pane { background: #18181b; color: #e4e4e7; padding: 4rem 1.5rem; text-align: center; border-top: 1px solid #27272a; }
       .contact-container { max-width: 600px; margin: 0 auto; }
-      .contact-container h2 { margin-top: 0; font-size: 2rem; margin-bottom: 0.5rem; color: #ffffff; }
-      .contact-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
-      .contact-form input, .contact-form textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #3f3f46; background: #27272a; color: white; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; }
-      .contact-form input:focus, .contact-form textarea:focus { border-color: #16a34a; }
-      .contact-form button { background: #16a34a; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
-      .contact-form button:hover { background: #15803d; }
-      @media (max-width: 600px) { .data-row, .search-card, .portal-card, .social-share { flex-direction: column; align-items: flex-start; } }
+      .contact-container h2 { margin-top: 0; font-size: 1.5rem; margin-bottom: 0.5rem; color: #ffffff; }
+      .contact-form { display: flex; flex-direction: column; gap: 0.75rem; text-align: left; }
+      .contact-form input, .contact-form textarea { width: 100%; padding: 0.85rem; border-radius: 4px; border: 1px solid #27272a; background: #09090b; color: white; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; outline: none; }
+      .contact-form input:focus, .contact-form textarea:focus { border-color: #10b981; }
+      .contact-form button { background: #10b981; color: #09090b; border: none; padding: 0.85rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+      @media (max-width: 600px) { .data-row, .social-share { flex-direction: column; align-items: flex-start; } }
     </style>
   </head>
   <body>
     <header class="site-header">
       <div class="header-container">
         <a href="/" class="logo-link">
-          <span class="logo-icon">💼</span>
           <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
         </a>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
@@ -135,84 +127,90 @@ const schema = {
     <div class="wrapper">
       <div class="card">
         <nav class="breadcrumb">
-          <a href="/">Home</a> <span>›</span> 
-          <a href={`/countries/${data.countrySlug}`}>{data.countryName}</a> <span>›</span> 
-          <a href={`/jobs/${data.jobSlug}`}>{data.jobTitle}</a> <span>›</span> 
-          {type === 'remote' ? 'Remote Profile' : 'Local Profile'}
+          <a href="/">ROOT</a> <span>//</span> 
+          <a href={`/countries/${data.countrySlug}`}>{data.countryName.toUpperCase()}</a> <span>//</span> 
+          <a href={`/jobs/${data.jobSlug}`}>{data.jobTitle.toUpperCase()}</a> <span>//</span> 
+          {type === 'remote' ? 'REMOTE_NODE' : 'LOCAL_NODE'}
         </nav>
 
         <img src={`https://images.unsplash.com/${selectedPhoto}?auto=format&fit=crop&w=800&q=80`} alt={data.countryName} class="hero-image" />
-        <h1>{data.jobTitle} Salary & Visa Guide in {data.countryName}</h1>
+        <h1>{data.jobTitle} Index: {data.countryName}</h1>
         
         <nav class="toggle-container">
-          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/remote`} class={type === 'remote' ? 'active' : ''}>Remote Worker</a>
-          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/local`} class={type === 'local' ? 'active' : ''}>Local Hire</a>
+          {data.canWorkRemote !== false && (
+            <a href={`/countries/${data.countrySlug}/${data.jobSlug}/remote`} class={type === 'remote' ? 'active' : ''}>Remote Mode</a>
+          )}
+          <a href={`/countries/${data.countrySlug}/${data.jobSlug}/local`} class={type === 'local' ? 'active' : ''}>Local Mode</a>
         </nav>
 
         <main>
           {type === 'remote' ? (
             <div class="data-grid">
-              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="data-label">Est. Remote Salary</span><span class="data-value">${estRemoteSalary.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="data-label">Remote Income Tax</span><span class="data-value">{data.nomadTax}</span></div>
-              <div class="data-row"><span class="data-label">Visa Option</span><span class="data-value">{data.nomadVisa}</span></div>
+              <div class="data-row"><span class="data-label">Base Living Index</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Est. Remote Matrix</span><span class="data-value">${estRemoteSalary.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Tax Protocol</span><span class="data-value">{data.nomadTax}</span></div>
+              <div class="data-row"><span class="data-label">Visa Protocol</span><span class="data-value">{data.nomadVisa}</span></div>
             </div>
           ) : (
             <div class="data-grid">
-              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="data-label">Avg. Local Salary</span><span class="data-value">${data.localSalary.toLocaleString()} / mo</span></div>
-              <div class="data-row"><span class="data-label">Local Income Tax</span><span class="data-value">{localTaxDisplay}</span></div>
-              <div class="data-row"><span class="data-label">Visa Option</span><span class="data-value">{data.localVisa}</span></div>
+              <div class="data-row"><span class="data-label">Base Living Index</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Local Compensation</span><span class="data-value">${data.localSalary.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Tax Protocol</span><span class="data-value">{localTaxDisplay}</span></div>
+              <div class="data-row"><span class="data-label">Visa Protocol</span><span class="data-value">{data.localVisa}</span></div>
             </div>
           )}
         </main>
 
         <section class="difficulty-box" style={`--accent-color: ${marketFriction.color}`}>
-          <h3 style={`margin: 0 0 0.25rem 0; color: ${marketFriction.color}`}>Job Market Difficulty: {marketFriction.level}</h3>
-          <p style="margin: 0; color: #52525b; font-size: 0.95rem;">{marketFriction.text}</p>
+          <h3 style={`margin: 0 0 0.25rem 0; color: ${marketFriction.color}; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;`}>Friction Level: {marketFriction.level}</h3>
+          <p style="margin: 0; color: #a1a1aa; font-size: 0.9rem;">{marketFriction.text}</p>
         </section>
 
         <div class="social-share">
-          <span>Share this market data:</span>
+          <span>Export Matrix Data:</span>
           <div style="display: flex; gap: 0.5rem;">
-            <a href={`https://twitter.com/intent/tweet?text=${tweetText}&url=${shareUrl}`} target="_blank" rel="noopener noreferrer" class="share-btn btn-twitter">Post to X</a>
-            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`} target="_blank" rel="noopener noreferrer" class="share-btn btn-linkedin">Share on LinkedIn</a>
+            <a href={`https://twitter.com/intent/tweet?text=${tweetText}&url=${shareUrl}`} target="_blank" rel="noopener noreferrer" class="share-btn btn-twitter">X Network</a>
+            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`} target="_blank" rel="noopener noreferrer" class="share-btn btn-linkedin">LinkedIn Node</a>
           </div>
         </div>
 
         <section class="search-card">
-          <div><h3>Find Open Roles</h3><p style="margin:0; font-size:0.95rem; color:#71717a;">Active {data.jobTitle} openings in {data.countryName}.</p></div>
-          <div style="display:flex; gap:0.5rem;">
-            <a href={`https://www.linkedin.com/jobs/search/?keywords=${data.jobTitle}&location=${data.countryName}`} target="_blank" class="search-btn">LinkedIn</a>
-            <a href={`https://www.google.com/search?q=${data.jobTitle}+jobs+in+${data.countryName}`} target="_blank" class="search-btn">Google</a>
+          <div style="flex: 1; min-width: 200px;">
+            <h3 style="margin:0 0 0.25rem 0; font-size: 1rem;">Query Open Telemetry</h3>
+            <p style="margin:0; font-size:0.85rem; color:#a1a1aa;">Active {data.jobTitle} parameters in {data.countryName}.</p>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap: wrap;">
+            {data.nicheJobBoardName && data.nicheJobBoardUrl && (
+              <a href={data.nicheJobBoardUrl} target="_blank" class="search-btn niche-btn">{data.nicheJobBoardName}</a>
+            )}
+            <a href={`https://www.linkedin.com/jobs/search/?keywords=${data.jobTitle}&location=${data.countryName}`} target="_blank" class="search-btn">LinkedIn API</a>
+            <a href={`https://www.google.com/search?q=${data.jobTitle}+jobs+in+${data.countryName}`} target="_blank" class="search-btn">Google API</a>
           </div>
         </section>
 
         <section class="portal-card">
-          <div><h3 style="margin-top:0; color:#166534;">Official Portal</h3><p style="margin:0; font-size:0.95rem; color:#15803d;">Use government resources to apply.</p></div>
-          <a href={data.visaLink} target="_blank" class="portal-btn">Visit Immigration →</a>
+          <div style="flex: 1; min-width: 200px;">
+            <h3 style="margin:0 0 0.25rem 0; color:#10b981; font-size: 1rem;">State Authorization</h3>
+            <p style="margin:0; font-size:0.85rem; color:#a1a1aa;">Access statutory clearance modules.</p>
+          </div>
+          <a href={data.visaLink} target="_blank" class="portal-btn">Access Portal ↗</a>
         </section>
 
         <section class="context-box">
-          <h2>Living in {data.countryName} as a {data.jobTitle}</h2>
-          <p>{data.localContext}</p>
-          <p style="margin-top: 1rem; color: #52525b;">Relocating to {data.countryName} offers distinct adjustments depending on lifestyle choices. Beyond housing expenses, professionals must plan around localized public infrastructure accessibility, progressive tax bracket limits, and regional healthcare registration requirements necessary to maintain baseline stability.</p>
+          <h2>Operational Context</h2>
+          <p style="color: #a1a1aa; font-size: 0.95rem;">{data.localContext}</p>
         </section>
       </div>
     </div>
 
     <footer class="contact-pane">
       <div class="contact-container">
-        <h2>Get in Touch</h2>
-        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 1.05rem;">Have questions about a specific market or want to report outdated data? Drop us a line.</p>
-        
+        <h2>Data Discrepancy Reporting</h2>
         <form action="https://formspree.io/f/xgobqeky" method="POST" class="contact-form">
-          <input type="email" name="email" placeholder="Your Email Address" required />
-          <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
-          <button type="submit">Send Message</button>
+          <input type="email" name="email" placeholder="Verification Email" required />
+          <textarea name="message" rows="4" placeholder="Log details..." required></textarea>
+          <button type="submit">Submit Log</button>
         </form>
-        
-        <p style="margin-top: 3rem; font-size: 0.8rem; color: #52525b;">EverywhereJob — Data sourced via Numbeo indexing databases, local statutory immigration logs, and ongoing international compensation reviews.</p>
       </div>
     </footer>
   </body>

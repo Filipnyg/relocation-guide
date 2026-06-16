@@ -24,49 +24,43 @@ const availableCountries = data
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Best Countries for {jobTitle}s - EverywhereJob</title>
+    <title>Global Compensation for {jobTitle}s - EverywhereJob</title>
     <style>
-      body { font-family: 'Inter', sans-serif; background-color: #f4f4f5; color: #3f3f46; margin: 0; padding-bottom: 0; }
-      .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; margin-bottom: 3rem; position: sticky; top: 0; z-index: 100; }
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #09090b; color: #e4e4e7; margin: 0; padding-bottom: 0; }
+      .site-header { background: #18181b; border-bottom: 1px solid #27272a; padding: 1rem 1.5rem; margin-bottom: 3rem; position: sticky; top: 0; z-index: 100; }
       .header-container { max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: opacity 0.2s; }
-      .logo-link:hover { opacity: 0.8; }
-      .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
-      .logo-highlight { color: #16a34a; }
-      .nav-text-link { color: #71717a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.2s; }
-      .nav-text-link:hover { color: #18181b; }
-      .get-started-btn { background: #16a34a; color: white; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
-      .get-started-btn:hover { background: #15803d; }
+      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+      .logo-text { font-weight: 700; font-size: 1.1rem; color: #ffffff; letter-spacing: -0.02em; text-transform: uppercase; }
+      .logo-highlight { color: #10b981; }
+      .nav-text-link { color: #a1a1aa; text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+      .nav-text-link:hover { color: #ffffff; }
+      .get-started-btn { background: #10b981; color: #09090b; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
       
       .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
       
-      /* BREADCRUMB */
-      .breadcrumb { font-size: 0.85rem; color: #71717a; margin-bottom: 1.5rem; }
-      .breadcrumb a { color: #16a34a; text-decoration: none; font-weight: 500; }
+      .breadcrumb { font-size: 0.8联rem; color: #71717a; margin-bottom: 2rem; font-family: monospace; }
+      .breadcrumb a { color: #10b981; text-decoration: none; }
       .breadcrumb a:hover { text-decoration: underline; }
-      .breadcrumb span { margin: 0 0.4rem; color: #a1a1aa; }
+      .breadcrumb span { margin: 0 0.3rem; color: #3f3f46; }
 
-      .card { background: #ffffff; border-radius: 20px; padding: 3rem; border: 1px solid #e4e4e7; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); }
-      h1 { font-size: 2.2rem; margin-top: 0; color: #18181b; letter-spacing: -0.03em; }
-      .subtitle { color: #71717a; font-size: 1.1rem; margin-bottom: 2.5rem; }
-      .link-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .link-list li { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; transition: all 0.2s ease; }
-      .link-list li:hover { transform: translateX(2px); border-color: #bbf7d0; background: #f0fdf4; }
-      .country-link { font-weight: 600; text-decoration: none; color: #27272a; font-size: 1.1rem; }
-      .link-list li:hover .country-link { color: #16a34a; }
-      .search-inline-link { font-size: 0.85rem; color: #16a34a; text-decoration: underline; margin-top: 0.2rem; display: block; }
-      .badge { background: #e4e4e7; color: #52525b; padding: 0.3rem 0.8rem; border-radius: 8px; font-size: 0.85rem; text-decoration: none; font-weight: 700; transition: background 0.2s; }
-      .link-list li:hover .badge { background: #dcfce7; color: #15803d; }
+      .card { background: #18181b; border-radius: 6px; padding: 2.5rem; border: 1px solid #27272a; }
+      h1 { font-size: 1.75rem; margin-top: 0; color: #ffffff; font-weight: 800; letter-spacing: -0.02em; }
+      .subtitle { color: #a1a1aa; font-size: 0.95rem; margin-bottom: 2.5rem; line-height: 1.5; }
       
-      /* CONTACT PANE */
-      .contact-pane { background: #18181b; color: #ffffff; padding: 4rem 1.5rem; text-align: center; margin-top: 2rem; }
+      .link-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+      .link-list li { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #09090b; border: 1px solid #27272a; border-radius: 4px; }
+      .link-list li:hover { border-color: #10b981; }
+      .country-link { font-weight: 600; text-decoration: none; color: #ffffff; font-size: 1rem; }
+      .search-inline-link { font-size: 0.8rem; color: #a1a1aa; text-decoration: none; margin-top: 0.25rem; display: block; }
+      .search-inline-link:hover { color: #10b981; text-decoration: underline; }
+      .badge { background: #27272a; color: #10b981; padding: 0.4rem 0.75rem; border-radius: 4px; font-size: 0.8rem; text-decoration: none; font-weight: 700; border: 1px solid #27272a; }
+      
+      .contact-pane { background: #18181b; color: #e4e4e7; padding: 4rem 1.5rem; text-align: center; border-top: 1px solid #27272a; }
       .contact-container { max-width: 600px; margin: 0 auto; }
-      .contact-container h2 { margin-top: 0; font-size: 2rem; margin-bottom: 0.5rem; color: #ffffff; }
-      .contact-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
-      .contact-form input, .contact-form textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #3f3f46; background: #27272a; color: white; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; transition: border-color 0.2s; }
-      .contact-form input:focus, .contact-form textarea:focus { border-color: #16a34a; }
-      .contact-form button { background: #16a34a; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; font-size: 1.05rem; }
-      .contact-form button:hover { background: #15803d; }
+      .contact-container h2 { margin-top: 0; font-size: 1.5rem; margin-bottom: 0.5rem; color: #ffffff; }
+      .contact-form { display: flex; flex-direction: column; gap: 0.75rem; text-align: left; }
+      .contact-form input, .contact-form textarea { width: 100%; padding: 0.85rem; border-radius: 4px; border: 1px solid #27272a; background: #09090b; color: white; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; outline: none; }
+      .contact-form input:focus, .contact-form textarea:focus { border-color: #10b981; }
       @media (max-width: 600px) { .link-list li { flex-direction: column; align-items: flex-start; gap: 1rem; } }
     </style>
   </head>
@@ -74,7 +68,6 @@ const availableCountries = data
     <header class="site-header">
       <div class="header-container">
         <a href="/" class="logo-link">
-          <span class="logo-icon">💼</span>
           <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
         </a>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
@@ -86,43 +79,39 @@ const availableCountries = data
     
     <div class="wrapper">
       <div class="card">
-        <!-- BREADCRUMBS -->
         <nav class="breadcrumb">
-          <a href="/">Home</a> <span>›</span> 
-          {jobTitle} Jobs
+          <a href="/">ROOT</a> <span>//</span> {jobTitle.toUpperCase()}_MATRICES
         </nav>
 
-        <h1>Global Markets for {jobTitle}s</h1>
-        <p class="subtitle">Select a destination below to unlock verified local salaries, income tax brackets, and official relocation visas for a {jobTitle}.</p>
+        <h1>{jobTitle} Allocations</h1>
+        <p class="subtitle">Global baseline analysis profiles displaying median compensation matrices across validated operational regions.</p>
         <ul class="link-list">
-          {availableCountries.map(c => (
-            <li>
-              <div>
-                <a href={`/countries/${c.countrySlug}/${job}/remote`} class="country-link">{c.countryName}</a>
-                <a href={`https://www.google.com/search?q=${jobTitle}+jobs+in+${c.countryName}`} target="_blank" rel="noopener noreferrer" class="search-inline-link">Browse local openings on Google →</a>
-              </div>
-              <a href={`/countries/${c.countrySlug}/${job}/remote`} class="badge">${c.localSalary.toLocaleString()} / mo →</a>
-            </li>
-          ))}
+          {availableCountries.map(c => {
+            const defaultLink = c.canWorkRemote !== false ? 'remote' : 'local';
+            return (
+              <li>
+                <div>
+                  <a href={`/countries/${c.countrySlug}/${job}/${defaultLink}`} class="country-link">{c.countryName}</a>
+                  <a href={`https://www.google.com/search?q=${jobTitle}+jobs+in+${c.countryName}`} target="_blank" rel="noopener noreferrer" class="search-inline-link">Query Search Matrix ↗</a>
+                </div>
+                <a href={`/countries/${c.countrySlug}/${job}/${defaultLink}`} class="badge">${c.localSalary.toLocaleString()} / mo</a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>
 
-    <!-- CONTACT FOOTER -->
     <footer class="contact-pane">
       <div class="contact-container">
-        <h2>Get in Touch</h2>
-        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 1.05rem;">Have questions about a specific market or want to report outdated data? Drop us a line.</p>
+        <h2>Data Discrepancy Reporting</h2>
+        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 0.95rem;">System validation logs refresh quarterly. Submit manual telemetry adjustments below.</p>
         
         <form action="https://formspree.io/f/xgobqeky" method="POST" class="contact-form">
-          <input type="email" name="email" placeholder="Your Email Address" required />
-          <textarea name="message" rows="4" placeholder="How can we help?" required></textarea>
-          <button type="submit">Send Message</button>
+          <input type="email" name="email" placeholder="Verification Email" required />
+          <textarea name="message" rows="4" placeholder="Log details or amendments..." required></textarea>
+          <button type="submit">Submit Log</button>
         </form>
-        
-        <p style="margin-top: 3rem; font-size: 0.8rem; color: #52525b;">
-          EverywhereJob — Data sourced via Numbeo indexing databases, local statutory immigration logs, and ongoing international compensation reviews.
-        </p>
       </div>
     </footer>
   </body>
