@@ -90,15 +90,17 @@ const schema = {
       .btn-twitter { background: #000000; border: 1px solid #27272a; }
       .btn-linkedin { background: #0a66c2; border: 1px solid #0a66c2; }
       
-      /* --- LIVE AGGREGATOR STYLING --- */
-      .aggregator-section { margin-top: 2rem; }
-      .aggregator-section h3 { font-size: 1.25rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; color: #ffffff; }
+      /* --- LIVE AGGREGATOR STYLING (FIXED FOR DYNAMIC HTML) --- */
+      .aggregator-section { margin-top: 2.5rem; }
+      .aggregator-section h3 { font-size: 1rem; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; color: #ffffff; border-bottom: 1px solid #27272a; padding-bottom: 0.5rem; }
       .job-cards-container { display: flex; flex-direction: column; gap: 0.75rem; }
-      .live-job-card { background: #09090b; border: 1px solid #27272a; border-radius: 4px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-      .live-job-info h4 { margin: 0 0 0.25rem 0; font-size: 0.95rem; color: #ffffff; font-weight: 600; }
-      .live-job-info p { margin: 0; font-size: 0.85rem; color: #a1a1aa; }
-      .apply-now-btn { background: #18181b; color: #10b981; border: 1px solid #27272a; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.15s; white-space: nowrap; }
-      .apply-now-btn:hover { border-color: #10b981; background: #10b981; color: #09090b; }
+      
+      :global(.live-job-card) { background: #09090b; border: 1px solid #27272a; border-radius: 4px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+      :global(.live-job-info h4) { margin: 0 0 0.25rem 0; font-size: 0.95rem; color: #ffffff; font-weight: 600; }
+      :global(.live-job-info p) { margin: 0; font-size: 0.85rem; color: #a1a1aa; }
+      :global(.apply-now-btn) { background: #18181b; color: #10b981; border: 1px solid #27272a; padding: 0.6rem 1.25rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.15s; white-space: nowrap; }
+      :global(.apply-now-btn:hover) { border-color: #10b981; background: #10b981; color: #09090b; }
+      
       .fallback-text { font-size: 0.9rem; color: #71717a; font-style: italic; padding: 1rem 0; }
 
       .portal-card { margin-top: 1.5rem; background: #09090b; padding: 1.5rem; border-radius: 6px; border: 1px solid #10b981; border-left: 4px solid #10b981; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
@@ -219,38 +221,85 @@ const schema = {
       </div>
     </footer>
 
-    <!-- --- CLIENT-SIDE AGGREGATOR ENGINE --- -->
-    <script define:vars={{ jobTitle: data.jobTitle, countryName: data.countryName, nicheUrl: data.nicheJobBoardUrl, nicheName: data.nicheJobBoardName }}>
-      document.addEventListener('DOMContentLoaded', () => {
+    <!-- --- CLIENT-SIDE AGGREGATOR ENGINE WITH REAL LIVE DATA --- -->
+    <script define:vars={{ jobTitle: data.jobTitle, countryName: data.countryName, countrySlug: data.countrySlug, nicheUrl: data.nicheJobBoardUrl, nicheName: data.nicheJobBoardName }}>
+      document.addEventListener('DOMContentLoaded', async () => {
         const container = document.getElementById('liveJobsContainer');
         
-        // Formulate highly optimized deep links for premium boards
-        const fallbackJobs = [
-          { title: `${jobTitle}`, company: "Global Enterprise Group", location: `${countryName}`, url: `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(jobTitle)}&location=${encodeURIComponent(countryName)}` },
-          { title: `Senior ${jobTitle}`, company: "International Operations Ltd", location: `${countryName}`, url: `https://www.google.com/search?q=${encodeURIComponent(jobTitle)}+jobs+in+${encodeURIComponent(countryName)}` }
-        ];
+        // ==========================================
+        // 🔑 PASTE YOUR ADZUNA KEYS HERE
+        // ==========================================
+        const ADZUNA_APP_ID = 'b6391fe1';
+        const ADZUNA_APP_KEY = '06b9ac7e075cb7a5b53ed86f8e2506f4';
+        // ==========================================
 
-        // If a specialized industry niche board is available in JSON, prioritize it first
+        // Map your internal country codes to standard ISO 2-letter codes for Adzuna's API
+        const countryMap = { "united-states": "us", "united-kingdom": "gb", "canada": "ca", "australia": "au", "germany": "de", "france": "fr", "netherlands": "nl", "sweden": "se", "spain": "es", "italy": "it", "brazil": "br", "mexico": "mx", "singapore": "sg", "japan": "jp", "switzerland": "ch", "austria": "at" };
+        const adzunaCountry = countryMap[countrySlug] || "us"; // Fallback to 'us' if code matches no explicit key
+
+        let jobCardsHtml = '';
+
+        // 1. If an explicit manual niche listing exists in your data.json, pin it first
         if (nicheUrl && nicheName) {
-          fallbackJobs.unshift({
-            title: `${jobTitle} (Verified Opening)`,
-            company: "Industry Specialized Hub",
-            location: `${countryName}`,
-            url: nicheUrl,
-            isNiche: true
-          });
+          jobCardsHtml += `
+            <div class="live-job-card">
+              <div class="live-job-info">
+                <h4>${jobTitle}</h4>
+                <p>Industry Specialized Portal — ${countryName} <span style="color:#10b981; font-weight:bold; font-size:0.75rem; margin-left:0.5rem;">[RECOMMENDED]</span></p>
+              </div>
+              <a href="${nicheUrl}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Apply Now ↗</a>
+            </div>
+          `;
         }
 
-        // Render the UI block cleanly
-        container.innerHTML = fallbackJobs.map(job => `
-          <div class="live-job-card">
-            <div class="live-job-info">
-              <h4>${job.title}</h4>
-              <p>${job.company} — ${job.location} ${job.isNiche ? '<span style="color:#10b981; font-weight:bold; font-size:0.75rem; margin-left:0.5rem;">[RECOMMENDED]</span>' : ''}</p>
+        try {
+          // 2. Fetch direct real-time data from Adzuna API matching the current role and region
+          const response = await fetch(`https://api.adzuna.com/v1/api/jobs/${adzunaCountry}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&results_per_page=3&what=${encodeURIComponent(jobTitle)}`);
+          
+          if (!response.ok) throw new Error('API request failed');
+          const apiData = await response.json();
+
+          if (apiData.results && apiData.results.length > 0) {
+            // Loop through live results and inject accurate metadata
+            apiData.results.forEach(job => {
+              const company = job.company?.display_name || "Verified Employer";
+              const location = job.location?.display_name || countryName;
+              
+              jobCardsHtml += `
+                <div class="live-job-card">
+                  <div class="live-job-info">
+                    <h4>${job.title}</h4>
+                    <p>${company} — ${location}</p>
+                  </div>
+                  <a href="${job.redirect_url}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Apply Now ↗</a>
+                </div>
+              `;
+            });
+            container.innerHTML = jobCardsHtml;
+          } else {
+            throw new Error('No direct results found');
+          }
+
+        } catch (error) {
+          // 3. Robust clean fallback if keys are missing or API encounters clean failure
+          jobCardsHtml += `
+            <div class="live-job-card">
+              <div class="live-job-info">
+                <h4>Active Openings on LinkedIn</h4>
+                <p>Launch live contextual application queries</p>
+              </div>
+              <a href="https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(jobTitle)}&location=${encodeURIComponent(countryName)}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Search LinkedIn ↗</a>
             </div>
-            <a href="${job.url}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Apply Now ↗</a>
-          </div>
-        `).join('');
+            <div class="live-job-card">
+              <div class="live-job-info">
+                <h4>Active Openings on Google Jobs</h4>
+                <p>Launch live indexed index sweeps</p>
+              </div>
+              <a href="https://www.google.com/search?q=${encodeURIComponent(jobTitle)}+jobs+in+${encodeURIComponent(countryName)}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Search Google ↗</a>
+            </div>
+          `;
+          container.innerHTML = jobCardsHtml;
+        }
       });
     </script>
   </body>
