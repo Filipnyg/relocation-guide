@@ -26,9 +26,15 @@ const availableCountries = data
     <title>Best Countries for {jobTitle}s - EverywhereJob</title>
     <style>
       body { font-family: 'Inter', sans-serif; background-color: #f4f4f5; color: #3f3f46; margin: 0; padding-bottom: 4rem; }
-      .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; margin-bottom: 3rem; }
-      .header-container { max-width: 760px; margin: 0 auto; display: flex; text-decoration: none; color: #18181b; font-weight: 800; font-size: 1.2rem; }
+      .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; margin-bottom: 3rem; position: sticky; top: 0; z-index: 100; }
+      .header-container { max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: opacity 0.2s; }
+      .logo-link:hover { opacity: 0.8; }
+      .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
       .logo-highlight { color: #16a34a; }
+      .nav-text-link:hover { color: #18181b !important; }
+      .get-started-btn { background: #16a34a; color: white; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
+      .get-started-btn:hover { background: #15803d; }
       .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem; }
       .card { background: #ffffff; border-radius: 20px; padding: 3rem; border: 1px solid #e4e4e7; }
       h1 { font-size: 2.2rem; margin-top: 0; color: #18181b; }
@@ -44,7 +50,16 @@ const availableCountries = data
   </head>
   <body>
     <header class="site-header">
-      <a href="/" class="header-container">💼 Everywhere<span class="logo-highlight">Job</span></a>
+      <div class="header-container" style="justify-content: space-between; width: 100%;">
+        <a href="/" class="logo-link" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+          <span class="logo-icon">💼</span>
+          <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
+        </a>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+          <a href="/resources" class="nav-text-link" style="color: #71717a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.2s;">Resources</a>
+          <a href="/guide" class="get-started-btn">Get Started</a>
+        </div>
+      </div>
     </header>
     <div class="wrapper">
       <div class="card">
