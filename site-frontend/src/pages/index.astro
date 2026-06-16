@@ -10,93 +10,78 @@ const getJobSlug = (title) => data.find(item => item.jobTitle === title)?.jobSlu
 // --- LEADERBOARD LOGIC ---
 const topPayingMarkets = Array.from(
   new Map(
-    [...data]
-      .sort((a, b) => b.localSalary - a.localSalary)
-      .map(item => [item.countrySlug, item])
+    [...data].sort((a, b) => b.localSalary - a.localSalary).map(item => [item.countrySlug, item])
   ).values()
 ).slice(0, 5);
 
-const qolScores = {
-  "switzerland": 96, "netherlands": 95, "denmark": 95, "norway": 94, "finland": 94,
-  "iceland": 93, "australia": 93, "new-zealand": 92, "sweden": 92, "germany": 91,
-  "ireland": 90, "estonia": 89, "canada": 89, "japan": 88, "singapore": 88, 
-  "united-states": 87, "united-kingdom": 86, "spain": 85, "france": 84, "portugal": 84, 
-  "czech-republic": 83, "taiwan": 83, "south-korea": 82, "italy": 81, "croatia": 80, 
-  "malta": 79, "cyprus": 78, "greece": 77, "united-arab-emirates": 76, "romania": 75, 
-  "hungary": 74, "latvia": 73, "malaysia": 68, "panama": 65, "costa-rica": 64, 
-  "mauritius": 63, "montenegro": 62, "mexico": 60, "georgia": 58, "thailand": 57, 
-  "colombia": 55, "indonesia": 54, "vietnam": 53, "brazil": 52, "argentina": 51, 
-  "south-africa": 50, "ecuador": 49, "belize": 48
-};
-
-const uniqueCountriesData = Array.from(
-  new Map(data.map(item => [item.countryName, { name: item.countryName, slug: item.countrySlug }])).values()
-);
-
-const topQualityOfLife = uniqueCountriesData
-  .map(country => ({ ...country, score: qolScores[country.slug] || 70 }))
-  .sort((a, b) => b.score - a.score)
-  .slice(0, 5);
+const qolScores = { "switzerland": 96, "netherlands": 95, "denmark": 95, "norway": 94, "finland": 94, "iceland": 93, "australia": 93, "new-zealand": 92, "sweden": 92, "germany": 91, "ireland": 90, "estonia": 89, "canada": 89, "japan": 88, "singapore": 88, "united-states": 87, "united-kingdom": 86, "spain": 85, "france": 84, "portugal": 84 };
+const uniqueCountriesData = Array.from(new Map(data.map(item => [item.countryName, { name: item.countryName, slug: item.countrySlug }])).values());
+const topQualityOfLife = uniqueCountriesData.map(c => ({ ...c, score: qolScores[c.slug] || 70 })).sort((a, b) => b.score - a.score).slice(0, 5);
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-	<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
-    <meta name="google-site-verification" content="EK2aLb4_ZKCvOfSWETXcFD-0_YOvd2vb-Zr16AsYQb4" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EverywhereJob - Global Relocation, Visa & Salary Guides</title>
     <meta name="description" content="Compare verified salaries, living costs, and visa requirements for tech roles across 40 countries." />
     
     <style>
-      body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f4f4f5; color: #3f3f46; line-height: 1.6; padding: 0 0 4rem 0; margin: 0; }
+      body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f4f4f5; color: #3f3f46; line-height: 1.6; margin: 0; padding-bottom: 0; }
       .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
-      .header-container { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: opacity 0.2s; }
+      .header-container { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
       .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: opacity 0.2s; }
       .logo-link:hover { opacity: 0.8; }
       .logo-icon { font-size: 1.3rem; }
       .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
       .logo-highlight { color: #16a34a; }
-      .nav-text-link:hover { color: #18181b !important; }
+      .nav-text-link { color: #71717a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.2s; }
+      .nav-text-link:hover { color: #18181b; }
       .get-started-btn { background: #16a34a; color: white; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
       .get-started-btn:hover { background: #15803d; }
-      .wrapper { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
-      .hero-intro { text-align: center; margin-bottom: 3rem; }
+      
+      .wrapper { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
+      .hero-intro { text-align: center; margin-bottom: 2rem; }
       .hero-intro h1 { font-size: 2.5rem; color: #18181b; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
       .hero-intro p { font-size: 1.15rem; color: #71717a; max-width: 600px; margin: 0 auto; }
+      
+      .search-container { max-width: 600px; margin: 0 auto 3rem auto; position: relative; }
+      .search-container input { width: 100%; padding: 1.25rem 1.5rem 1.25rem 3rem; font-size: 1.1rem; border-radius: 12px; border: 1px solid #e4e4e7; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); outline: none; box-sizing: border-box; transition: all 0.2s; }
+      .search-container input:focus { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1); }
+      .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.2rem; opacity: 0.5; }
+      
       .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
       .card { background: #ffffff; border-radius: 20px; padding: 2.5rem; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); border: 1px solid #e4e4e7; }
       .card h2 { font-size: 1.35rem; color: #18181b; margin-top: 0; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.5rem; }
       .leaderboard-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .leaderboard-list li a { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease; }
-      .leaderboard-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+      .leaderboard-list li a { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
+      .leaderboard-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateY(-2px); }
       .stat-badge { background: #e2e8f0; color: #334155; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; }
       .leaderboard-list li a:hover .stat-badge { background: #dcfce7; color: #15803d; }
       .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .link-list li a { display: block; padding: 0.75rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease; }
+      .link-list li a { display: block; padding: 0.75rem 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; color: #27272a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
       .link-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; transform: translateX(2px); }
-      footer { text-align: center; margin-top: 5rem; font-size: 0.85rem; color: #a1a1aa; padding-top: 2rem; border-top: 1px solid #e4e4e7; }
-      @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .hero-intro h1 { font-size: 2rem; } }
-	  /* --- CONTACT FOOTER STYLES --- */
-      .contact-pane { background: #18181b; color: #ffffff; padding: 4rem 1.5rem; margin-top: 4rem; text-align: center; }
+      
+      .contact-pane { background: #18181b; color: #ffffff; padding: 4rem 1.5rem; text-align: center; }
       .contact-container { max-width: 600px; margin: 0 auto; }
       .contact-container h2 { margin-top: 0; font-size: 2rem; margin-bottom: 0.5rem; color: #ffffff; }
-      .contact-container p { color: #a1a1aa; margin-bottom: 2rem; font-size: 1.05rem; }
       .contact-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
-      .contact-form input, .contact-form textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #3f3f46; background: #27272a; color: white; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; transition: border-color 0.2s; }
+      .contact-form input, .contact-form textarea { width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #3f3f46; background: #27272a; color: white; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; }
       .contact-form input:focus, .contact-form textarea:focus { border-color: #16a34a; }
-      .contact-form button { background: #16a34a; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
+      .contact-form button { background: #16a34a; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
       .contact-form button:hover { background: #15803d; }
+      @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .hero-intro h1 { font-size: 2rem; } }
     </style>
   </head>
   <body>
     <header class="site-header">
-      <div class="header-container" style="justify-content: space-between; width: 100%;">
-        <a href="/" class="logo-link" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+      <div class="header-container">
+        <a href="/" class="logo-link">
           <span class="logo-icon">💼</span>
           <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
         </a>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-          <a href="/resources" class="nav-text-link" style="color: #71717a; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.2s;">Resources</a>
+          <a href="/resources" class="nav-text-link">Resources</a>
           <a href="/guide" class="get-started-btn">Get Started</a>
         </div>
       </div>
@@ -108,76 +93,54 @@ const topQualityOfLife = uniqueCountriesData
         <p>Compare tech salaries, living costs, and visa requirements across 40 countries. Real data to help you plan your next international move.</p>
       </section>
 
-      <!-- GLOBAL INSIGHTS -->
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="directorySearch" placeholder="Search for a country or role (e.g., 'Spain' or 'Data')..." />
+      </div>
+
       <section class="grid-2">
         <div class="card">
           <h2><span>📈</span> Top Paying Markets</h2>
           <ul class="leaderboard-list">
             {topPayingMarkets.map((market) => (
-              <li>
-                <a href={`/countries/${market.countrySlug}`}>
-                  <span>{market.countryName} Market Apex</span>
-                  <span class="stat-badge">Up to ${market.localSalary.toLocaleString()} / mo</span>
-                </a>
-              </li>
+              <li><a href={`/countries/${market.countrySlug}`}><span>{market.countryName} Market Apex</span><span class="stat-badge">Up to ${market.localSalary.toLocaleString()} / mo</span></a></li>
             ))}
           </ul>
         </div>
-
         <div class="card">
           <h2><span>🌟</span> Highest Quality of Life</h2>
           <ul class="leaderboard-list">
             {topQualityOfLife.map((country) => (
-              <li>
-                <a href={`/countries/${country.slug}`}>
-                  <span>{country.name}</span>
-                  <span class="stat-badge">Score: {country.score}/100</span>
-                </a>
-              </li>
+              <li><a href={`/countries/${country.slug}`}><span>{country.name}</span><span class="stat-badge">Score: {country.score}/100</span></a></li>
             ))}
           </ul>
         </div>
       </section>
 
-      <!-- MAIN DIRECTORIES -->
       <main class="grid-2">
         <div class="card">
           <h2><span>🌍</span> Explore By Country</h2>
-          <ul class="link-list">
-            {countries.map((countryName) => {
-              const slug = getCountrySlug(countryName);
-              return (
-                <li>
-                  <a href={`/countries/${slug}`}>
-                    {countryName} Guides →
-                  </a>
-                </li>
-              );
-            })}
+          <ul class="link-list filterable-list">
+            {countries.map((countryName) => (
+              <li><a href={`/countries/${getCountrySlug(countryName)}`}>{countryName} Guides →</a></li>
+            ))}
           </ul>
         </div>
-
         <div class="card">
           <h2><span>👨‍💻</span> Explore By Profession</h2>
-          <ul class="link-list">
-            {jobs.map((jobTitle) => {
-              const slug = getJobSlug(jobTitle);
-              return (
-                <li>
-                  <a href={`/jobs/${slug}`}>
-                    {jobTitle} Jobs →
-                  </a>
-                </li>
-              );
-            })}
+          <ul class="link-list filterable-list">
+            {jobs.map((jobTitle) => (
+              <li><a href={`/jobs/${getJobSlug(jobTitle)}`}>{jobTitle} Jobs →</a></li>
+            ))}
           </ul>
         </div>
       </main>
+    </div>
 
-     </div> </div> <footer class="contact-pane">
+    <footer class="contact-pane">
       <div class="contact-container">
         <h2>Get in Touch</h2>
-        <p>Have questions about a specific market or want to report outdated data? Drop us a line.</p>
+        <p style="color: #a1a1aa; margin-bottom: 2rem; font-size: 1.05rem;">Have questions about a market or want to report outdated data? Drop us a line.</p>
         
         <form action="https://formspree.io/f/xgobqeky" method="POST" class="contact-form">
           <input type="email" name="email" placeholder="Your Email Address" required />
@@ -185,10 +148,23 @@ const topQualityOfLife = uniqueCountriesData
           <button type="submit">Send Message</button>
         </form>
         
-        <p style="margin-top: 3rem; font-size: 0.8rem; color: #52525b;">
-          EverywhereJob — Data sourced via Numbeo indexing databases, local statutory immigration logs, and ongoing international compensation reviews.
-        </p>
+        <p style="margin-top: 3rem; font-size: 0.8rem; color: #52525b;">EverywhereJob — Data compiled quarterly from Numbeo cost thresholds and local statutory immigration statistics.</p>
       </div>
     </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('directorySearch');
+        const listItems = document.querySelectorAll('.filterable-list li');
+
+        searchInput.addEventListener('input', (e) => {
+          const term = (e.target as HTMLInputElement).value.toLowerCase();
+          listItems.forEach(li => {
+            const text = li.textContent.toLowerCase();
+            li.style.display = text.includes(term) ? 'block' : 'none';
+          });
+        });
+      });
+    </script>
   </body>
 </html>
