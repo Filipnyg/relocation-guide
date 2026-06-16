@@ -19,7 +19,6 @@ const availableJobs = data
   .filter(item => item.countrySlug === country)
   .sort((a, b) => a.jobTitle.localeCompare(b.jobTitle));
 ---
-
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -34,9 +33,14 @@ const availableJobs = data
       .card { background: #ffffff; border-radius: 20px; padding: 3rem; border: 1px solid #e4e4e7; }
       .hero-image { width: 100%; height: 240px; object-fit: cover; border-radius: 12px; margin-bottom: 2rem; }
       h1 { font-size: 2.2rem; margin-top: 0; color: #18181b; }
+      .subtitle { color: #71717a; font-size: 1.1rem; margin-bottom: 2.5rem; margin-top: -0.5rem; }
       .link-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-      .link-list li a { display: flex; justify-content: space-between; padding: 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; text-decoration: none; color: #27272a; font-weight: 600; }
-      .link-list li a:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
+      .link-list li { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #fafafa; border: 1px solid #f4f4f5; border-radius: 10px; }
+      .job-link { font-weight: 600; text-decoration: none; color: #27272a; font-size: 1.1rem; }
+      .job-link:hover { color: #16a34a; }
+      .search-inline-link { font-size: 0.85rem; color: #16a34a; text-decoration: underline; margin-top: 0.2rem; display: block; }
+      .badge { background: #e4e4e7; color: #52525b; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.85rem; text-decoration: none; font-weight: 600; }
+      .badge:hover { background: #dcfce7; color: #15803d; }
     </style>
   </head>
   <body>
@@ -47,18 +51,15 @@ const availableJobs = data
       <div class="card">
         <img src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80&sig=${country}`} alt={countryName} class="hero-image" />
         <h1>{countryName} Career Options</h1>
-        <p class="subtitle">Select your profession below to see visa policies, tax details, and market salaries. Use the search links to find active vacancies.</p>
-        
+        <p class="subtitle">Select a profession below to see visa policies, tax details, and market salaries. Use the links to look up active vacancies.</p>
         <ul class="link-list">
           {availableJobs.map(job => (
             <li>
-              <a href={/countries/${country}/${job.jobSlug}/remote}>
-                <div>
-                  <span style="display:block; font-size: 1.1rem;">{job.jobTitle}</span>
-                  <a href={`https://www.linkedin.com/jobs/search/?keywords=${job.jobTitle}&location=${countryName}`} target="_blank" style="font-size: 0.8rem; color: #16a34a; text-decoration: underline;">Find {job.jobTitle} jobs in {countryName} →</a>
-                </div>
-                <span class="badge">View Guide →</span>
-              </a>
+              <div>
+                <a href={`/countries/${country}/${job.jobSlug}/remote`} class="job-link">{job.jobTitle}</a>
+                <a href={`https://www.linkedin.com/jobs/search/?keywords=${job.jobTitle}&location=${countryName}`} target="_blank" rel="noopener noreferrer" class="search-inline-link">Find active openings on LinkedIn →</a>
+              </div>
+              <a href={`/countries/${country}/${job.jobSlug}/remote`} class="badge">View Guide →</a>
             </li>
           ))}
         </ul>
