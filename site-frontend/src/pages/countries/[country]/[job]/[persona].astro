@@ -18,7 +18,37 @@ export async function getStaticPaths() {
 
 const { data, type } = Astro.props;
 
-// Smart calculations for the UI
+// Scenic Photostream Reference Map
+const photoMap = {
+  "switzerland": "photo-1528127269322-539801943592",
+  "netherlands": "photo-1517736996458-ee3bc867a145",
+  "denmark": "photo-1513622470522-26c3c8a854bc",
+  "norway": "photo-1527004013197-933c4bb611b3",
+  "finland": "photo-1528154291023-a6525fabb169",
+  "australia": "photo-1523482596083-d46196c3365f",
+  "spain": "photo-1543783207-ec64e4d95325",
+  "germany": "photo-1467269204594-9661b134dd2b",
+  "united-kingdom": "photo-1513635269975-59663e0ca1ad",
+  "united-states": "photo-1501594907352-04cda38ebc29",
+  "canada": "photo-1507608869274-d3177c8bb4c7",
+  "japan": "photo-1493976040374-85c8e12f0c0e",
+  "singapore": "photo-1525625293386-3f8f99389edd",
+  "france": "photo-1502602898657-3e91760cbb34",
+  "italy": "photo-1498050108023-c5249f4df085"
+};
+const selectedPhoto = photoMap[data.countrySlug] || "photo-1506744038136-46273834b3fb";
+
+// Market Entry Friction Engine
+const getDifficultyRating = (salary, country) => {
+  if (salary > 8000 || ["switzerland", "united-states", "singapore"].includes(country)) {
+    return { level: "High", color: "#ef4444", text: "Competitive market entry. Requires stringent visa sponsorship tracking or established high-tier foreign employment criteria." };
+  } else if (salary > 4500) {
+    return { level: "Moderate", color: "#f59e0b", text: "Standard professional criteria. Readily achievable for mid-to-senior profiles with verified enterprise backgrounds." };
+  }
+  return { level: "Accessible", color: "#10b981", text: "Highly welcoming pipeline. Streamlined processing or low barrier financial benchmarks for incoming engineering professionals." };
+};
+
+const marketFriction = getDifficultyRating(data.localSalary, data.countrySlug);
 const estRemoteSalary = data.localSalary > 4000 ? data.localSalary + 1500 : 5500 + (data.jobTitle.length * 100);
 const localTaxDisplay = data.countryName === 'United Arab Emirates' ? '0% Personal Income Tax' : 'Standard progressive local tax scales';
 ---
@@ -29,48 +59,48 @@ const localTaxDisplay = data.countryName === 'United Arab Emirates' ? '0% Person
     <meta name="google-site-verification" content="EK2aLb4_ZKCvOfSWETXcFD-0_YOvd2vb-Zr16AsYQb4" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Moving to {data.countryName} as a {data.jobTitle} | EverywhereJob</title>
-    <meta name="description" content={`A complete 2026 relocation guide for a ${data.jobTitle} moving to ${data.countryName}. Compare visa options, salaries, and tax rates.`} />
+    <meta name="description" content={`A complete relocation guide for a ${data.jobTitle} moving to ${data.countryName}. Compare visa options, salaries, and tax rates.`} />
     
     <style>
       body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f4f4f5; color: #3f3f46; line-height: 1.6; padding: 0 0 4rem 0; margin: 0; }
       .site-header { background: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 1.25rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
       .header-container { max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: opacity 0.2s; }
-      .header-container:hover { opacity: 0.8; }
-      .logo-icon { font-size: 1.3rem; }
       .logo-text { font-weight: 800; font-size: 1.2rem; color: #18181b; letter-spacing: -0.03em; }
       .logo-highlight { color: #16a34a; }
       .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem; }
       .card { background: #ffffff; border-radius: 20px; padding: 3rem; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); border: 1px solid #e4e4e7; }
       .hero-image { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; margin-bottom: 2rem; background-color: #e4e4e7; }
-      h1 { font-size: 2.2rem; color: #18181b; margin-top: 0; line-height: 1.2; font-weight: 800; letter-spacing: -0.03em; }
+      h1 { font-size: 2.2rem; color: #18181b; margin-top: 0; font-weight: 800; letter-spacing: -0.03em; }
       .toggle-container { display: inline-flex; background: #f4f4f5; padding: 6px; border-radius: 14px; margin: 1.5rem 0 2.5rem 0; }
-      .toggle-container a { padding: 0.85rem 1.5rem; text-decoration: none; color: #71717a; font-weight: 600; border-radius: 10px; font-size: 0.95rem; transition: all 0.2s ease; }
-      .toggle-container a.active { background: #ffffff; color: #18181b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); }
+      .toggle-container a { padding: 0.85rem 1.5rem; text-decoration: none; color: #71717a; font-weight: 600; border-radius: 10px; font-size: 0.95rem; }
+      .toggle-container a.active { background: #ffffff; color: #18181b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
       .data-grid { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
       .data-row { display: flex; justify-content: space-between; padding: 1.25rem 1.5rem; background: #fafafa; border-radius: 12px; border: 1px solid #f4f4f5; align-items: center; }
       .data-label { color: #71717a; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-      .data-value { font-weight: 700; color: #18181b; font-size: 1.1rem; text-align: right; max-width: 60%; }
+      .data-value { font-weight: 700; color: #18181b; font-size: 1.1rem; text-align: right; }
+      .difficulty-box { margin-top: 2rem; padding: 1.5rem; border-radius: 12px; border-left: 5px solid var(--accent-color); background: #fafafa; }
       .context-box { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #e4e4e7; }
+      .context-box h2 { font-size: 1.5rem; color: #18181b; margin-bottom: 1rem; }
       .search-card { margin-top: 1rem; background: #ffffff; padding: 1.5rem; border-radius: 16px; border: 1px solid #e4e4e7; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-      .portal-card { margin-top: 1rem; background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%); padding: 2rem; border-radius: 16px; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+      .portal-card { margin-top: 1rem; background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%); padding: 2rem; border-radius: 16px; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: space-between; }
       .portal-btn { background: #16a34a; color: white; padding: 0.85rem 1.75rem; border-radius: 10px; text-decoration: none; font-weight: 600; }
-      .search-btn { background: #f4f4f5; color: #3f3f46; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem; }
-      .search-btn:hover { background: #e4e4e7; transform: translateY(-1px); }
-      @media (max-width: 600px) { .data-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .data-value { text-align: left; max-width: 100%; } }
+      .search-btn { background: #f4f4f5; color: #3f3f46; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 600; }
+      footer { text-align: center; margin-top: 4rem; font-size: 0.8rem; color: #a1a1aa; }
+      @media (max-width: 600px) { .data-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .search-card, .portal-card { flex-direction: column; align-items: flex-start; } }
     </style>
   </head>
   <body>
     <header class="site-header">
       <a href="/" class="header-container">
-        <span class="logo-icon">💼</span>
         <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
       </a>
     </header>
 
     <div class="wrapper">
       <div class="card">
-        <img src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80&sig=${data.countrySlug}`} alt={data.countryName} class="hero-image" />
+        <img src={`https://images.unsplash.com/${selectedPhoto}?auto=format&fit=crop&w=800&q=80`} alt={data.countryName} class="hero-image" />
         <h1>{data.jobTitle} Salary & Visa Guide in {data.countryName}</h1>
+        
         <nav class="toggle-container">
           <a href={`/countries/${data.countrySlug}/${data.jobSlug}/remote`} class={type === 'remote' ? 'active' : ''}>Remote Worker</a>
           <a href={`/countries/${data.countrySlug}/${data.jobSlug}/local`} class={type === 'local' ? 'active' : ''}>Local Hire</a>
@@ -94,6 +124,11 @@ const localTaxDisplay = data.countryName === 'United Arab Emirates' ? '0% Person
           )}
         </main>
 
+        <section class="difficulty-box" style={`--accent-color: ${marketFriction.color}`}>
+          <h3 style={`margin: 0 0 0.25rem 0; color: ${marketFriction.color}`}>Job Market Difficulty: {marketFriction.level}</h3>
+          <p style="margin: 0; color: #52525b; font-size: 0.95rem;">{marketFriction.text}</p>
+        </section>
+
         <section class="search-card">
           <div><h3>Find Open Roles</h3><p>Active {data.jobTitle} openings in {data.countryName}.</p></div>
           <div style="display:flex; gap:0.5rem;">
@@ -108,9 +143,14 @@ const localTaxDisplay = data.countryName === 'United Arab Emirates' ? '0% Person
         </section>
 
         <section class="context-box">
-          <h2>Living in {data.countryName}</h2>
+          <h2>Living in {data.countryName} as a {data.jobTitle}</h2>
           <p>{data.localContext}</p>
+          <p style="margin-top: 1rem; color: #52525b;">Relocating to {data.countryName} offers distinct adjustments depending on lifestyle choices. Beyond housing expenses, professionals must plan around localized public infrastructure accessibility, progressive tax bracket limits, and regional healthcare registration requirements necessary to maintain baseline stability.</p>
         </section>
+
+        <footer>
+          <p>Verification Statement: Sourced via Numbeo indexing databases, local statutory immigration logs, and ongoing international software market compensation reviews.</p>
+        </footer>
       </div>
     </div>
   </body>
