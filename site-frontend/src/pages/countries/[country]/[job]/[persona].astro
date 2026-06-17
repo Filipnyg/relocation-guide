@@ -77,7 +77,6 @@ const schema = {
       .toggle-container a { padding: 0.65rem 1.25rem; text-decoration: none; color: #a1a1aa; font-weight: 600; border-radius: 4px; font-size: 0.85rem; transition: all 0.15s; }
       .toggle-container a.active { background: #18181b; color: #10b981; border: 1px solid #27272a; }
 
-      /* --- PERSONALIZER WIDGET STYLING --- */
       .personalizer-widget { background: #09090b; border: 1px solid #27272a; border-radius: 4px; padding: 1.25rem; margin-bottom: 1.5rem; }
       .personalizer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
       .personalizer-title { font-size: 0.75rem; font-weight: 700; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -99,16 +98,21 @@ const schema = {
       .btn-twitter { background: #000000; border: 1px solid #27272a; }
       .btn-linkedin { background: #0a66c2; border: 1px solid #0a66c2; }
       
-      /* --- AGGREGATOR & PULSE STYLING --- */
       .aggregator-section, .pulse-section { margin-top: 2.5rem; }
       .aggregator-section h3, .pulse-section h3 { font-size: 1rem; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; color: #ffffff; border-bottom: 1px solid #27272a; padding-bottom: 0.5rem; }
       .job-cards-container, .pulse-container { display: flex; flex-direction: column; gap: 0.75rem; }
       
-      :global(.live-job-card), :global(.pulse-card) { background: #09090b; border: 1px solid #27272a; border-radius: 4px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-      :global(.live-job-info h4), :global(.pulse-info h4) { margin: 0 0 0.25rem 0; font-size: 0.95rem; color: #ffffff; font-weight: 600; }
-      :global(.live-job-info p), :global(.pulse-info p) { margin: 0; font-size: 0.85rem; color: #a1a1aa; }
-      :global(.apply-now-btn), :global(.pulse-tag) { background: #18181b; color: #10b981; border: 1px solid #27272a; padding: 0.6rem 1.25rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.15s; white-space: nowrap; }
-      :global(.apply-now-btn:hover), :global(.pulse-tag:hover) { border-color: #10b981; background: #10b981; color: #09090b; }
+      :global(.live-job-card) { background: #09090b; border: 1px solid #27272a; border-radius: 4px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+      :global(.live-job-info h4) { margin: 0 0 0.25rem 0; font-size: 0.95rem; color: #ffffff; font-weight: 600; }
+      :global(.live-job-info p) { margin: 0; font-size: 0.85rem; color: #a1a1aa; }
+      :global(.apply-now-btn) { background: #18181b; color: #10b981; border: 1px solid #27272a; padding: 0.6rem 1.25rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.15s; white-space: nowrap; }
+      :global(.apply-now-btn:hover) { border-color: #10b981; background: #10b981; color: #09090b; }
+
+      /* Updated Pulse Card Styling to act as a full clickable link */
+      :global(a.pulse-card) { background: #09090b; border: 1px solid #27272a; border-radius: 4px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; text-decoration: none; transition: border-color 0.15s; }
+      :global(a.pulse-card:hover) { border-color: #10b981; }
+      :global(.pulse-info h4) { margin: 0; font-size: 0.95rem; color: #ffffff; font-weight: 600; line-height: 1.4; }
+      :global(.pulse-meta) { margin: 0; font-size: 0.8rem; color: #a1a1aa; }
       
       .fallback-text { font-size: 0.9rem; color: #71717a; font-style: italic; padding: 1rem 0; }
 
@@ -125,7 +129,7 @@ const schema = {
       .contact-form input, .contact-form textarea { width: 100%; padding: 0.85rem; border-radius: 4px; border: 1px solid #27272a; background: #09090b; color: white; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; outline: none; }
       .contact-form input:focus, .contact-form textarea:focus { border-color: #10b981; }
       .contact-form button { background: #10b981; color: #09090b; border: none; padding: 0.85rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
-      @media (max-width: 600px) { .data-row, .social-share, .live-job-card, .pulse-card { flex-direction: column; align-items: flex-start; } .apply-now-btn, .pulse-tag { width: 100%; text-align: center; } }
+      @media (max-width: 600px) { .data-row, .social-share, .live-job-card { flex-direction: column; align-items: flex-start; } .apply-now-btn { width: 100%; text-align: center; } }
     </style>
   </head>
   <body>
@@ -249,14 +253,11 @@ const schema = {
     <script define:vars={{ baseCost: data.costOfLiving, countrySlug: data.countrySlug, jobTitle: data.jobTitle, countryName: data.countryName, nicheUrl: data.nicheJobBoardUrl, nicheName: data.nicheJobBoardName }}>
       document.addEventListener('DOMContentLoaded', () => {
         
-        // ==========================================
         // COST OF LIVING PERSONALIZER
-        // ==========================================
         const slider = document.getElementById('householdSlider');
         const label = document.getElementById('householdLabel');
         const displayVal = document.getElementById('dynamicColValue');
 
-        // Define custom multipliers based on the country's unique housing/childcare dynamics
         const highCostMarkets = ["switzerland", "united-states", "singapore", "united-kingdom"];
         const midCostMarkets = ["germany", "netherlands", "france", "australia", "canada", "japan"];
 
@@ -269,7 +270,6 @@ const schema = {
 
         function calculateCost(val) {
           let multiplier = 1.0;
-          
           if (highCostMarkets.includes(countrySlug)) {
             if (val === 2) multiplier = 1.75;
             if (val === 3) multiplier = 2.40;
@@ -283,7 +283,6 @@ const schema = {
             if (val === 3) multiplier = 1.85;
             if (val === 4) multiplier = 2.25;
           }
-
           const calculated = Math.round(baseCost * multiplier);
           displayVal.innerText = `$${calculated.toLocaleString()} / mo`;
         }
@@ -294,9 +293,7 @@ const schema = {
           calculateCost(val);
         });
 
-        // ==========================================
-        // LIVE JOB AGGREGATOR (FALLBACK)
-        // ==========================================
+        // LIVE JOB AGGREGATOR
         const jobContainer = document.getElementById('liveJobsContainer');
         let jobCardsHtml = '';
         if (nicheUrl && nicheName) {
@@ -333,12 +330,11 @@ const schema = {
         // ==========================================
         const pulseContainer = document.getElementById('pulseContainer');
         
-        // Wrap in an async IIFE to allow await inside the DOMContentLoaded listener
         (async function fetchPulse() {
           try {
-            // Build a targeted search query for the specific country
             const redditQuery = encodeURIComponent(`moving to ${countryName} expat`);
-            const response = await fetch(`https://www.reddit.com/search.json?q=${redditQuery}&sort=relevance&limit=2`);
+            // Fetch 3 posts instead of 2
+            const response = await fetch(`https://www.reddit.com/search.json?q=${redditQuery}&sort=relevance&limit=3`);
             
             if (!response.ok) throw new Error('Reddit API blocked or failed');
             
@@ -346,34 +342,32 @@ const schema = {
             const posts = json.data.children;
 
             if (posts.length > 0) {
-              pulseContainer.innerHTML = posts.map(post => {
+              // Map exactly 3 posts, generating clickable cards
+              pulseContainer.innerHTML = posts.slice(0,3).map(post => {
                 const p = post.data;
-                // Clean up long titles so they fit nicely in the UI
-                const shortTitle = p.title.length > 75 ? p.title.substring(0, 75) + '...' : p.title;
+                const shortTitle = p.title.length > 85 ? p.title.substring(0, 85) + '...' : p.title;
                 
                 return `
-                  <div class="pulse-card">
+                  <a href="https://www.reddit.com${p.permalink}" target="_blank" rel="noopener noreferrer" class="pulse-card">
                     <div class="pulse-info">
                       <h4>${shortTitle}</h4>
-                      <p>${p.num_comments} comments • r/${p.subreddit}</p>
+                      <p class="pulse-meta">Source: Reddit • r/${p.subreddit} • ${p.num_comments} comments</p>
                     </div>
-                    <a href="https://www.reddit.com${p.permalink}" target="_blank" rel="noopener noreferrer" class="pulse-tag" style="text-decoration:none; color:#10b981; border-color:#10b981;">View Thread ↗</a>
-                  </div>
+                  </a>
                 `;
               }).join('');
             } else {
               throw new Error('No relevant posts found');
             }
           } catch (error) {
-            // Failsafe: If adblockers or browser privacy settings block the API, show a contextual fallback
+            // Fallback UI matching the new clickable card design (in case adblocker stops the fetch)
             pulseContainer.innerHTML = `
-              <div class="pulse-card">
+              <a href="https://www.reddit.com/search/?q=moving+to+${encodeURIComponent(countryName)}" target="_blank" rel="noopener noreferrer" class="pulse-card">
                 <div class="pulse-info">
-                  <h4>Is finding an apartment in ${countryName} as bad as everyone says?</h4>
-                  <p>34 comments • Active 2h ago</p>
+                  <h4>Search local expat discussions for ${countryName}</h4>
+                  <p class="pulse-meta">Source: Reddit Search</p>
                 </div>
-                <span class="pulse-tag" style="color: #a1a1aa; border: 1px solid #27272a;">HOUSING</span>
-              </div>
+              </a>
             `;
           }
         })();
