@@ -39,11 +39,11 @@ const uniqueCountries = [...new Set(data.map(item => item.countryName))].sort();
       .data-column { background: #18181b; border: 1px solid #27272a; border-radius: 6px; padding: 1.5rem; min-height: 400px; }
       .col-title { font-size: 1.25rem; color: #ffffff; font-weight: 700; margin-top: 0; margin-bottom: 1.5rem; border-bottom: 1px solid #27272a; padding-bottom: 0.75rem; }
       
-      .data-row { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #27272a; align-items: center; }
-      .data-row:last-child { border-bottom: none; }
-      .data-label { color: #a1a1aa; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-      .data-value { font-weight: 700; color: #ffffff; font-size: 1rem; text-align: right; max-width: 60%; line-height: 1.3; }
-      .win-highlight { color: #10b981; }
+      :global(.data-row) { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #27272a; align-items: center; }
+      :global(.data-row:last-child) { border-bottom: none; }
+      :global(.data-label) { color: #a1a1aa; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+      :global(.data-value) { font-weight: 700; color: #ffffff; font-size: 1rem; text-align: right; max-width: 60%; line-height: 1.3; }
+      :global(.win-highlight) { color: #10b981; }
 
       .empty-state { text-align: center; padding: 3rem 1rem; color: #71717a; font-style: italic; }
 
@@ -53,11 +53,14 @@ const uniqueCountries = [...new Set(data.map(item => item.countryName))].sort();
   <body>
     <header class="site-header">
       <div class="header-container">
-        <a href="/" class="logo-link"><span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span></a>
-        <div class="nav-links">
-          <a href="/compare" class="nav-text-link" style="color:#ffffff;">Compare</a>
+        <a href="/" class="logo-link">
+          <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
+        </a>
+        <div class="nav-links" style="display: flex; gap: 1.5rem; align-items: center;">
+          <a href="/compare" class="nav-text-link">Compare</a>
           <a href="/resources" class="nav-text-link">Resources</a>
           <a href="/guide" class="get-started-btn">Get Started</a>
+        </div>
       </div>
     </header>
 
