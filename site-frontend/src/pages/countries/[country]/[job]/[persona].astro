@@ -325,20 +325,16 @@ const schema = {
         `;
         jobContainer.innerHTML = jobCardsHtml;
 
-// ==========================================
-        // EXPAT COMMUNITY PULSE (LIVE REDDIT API - CORS FIXED)
+        // ==========================================
+        // EXPAT COMMUNITY PULSE (LIVE REDDIT API)
         // ==========================================
         const pulseContainer = document.getElementById('pulseContainer');
         
         (async function fetchPulse() {
           try {
             const redditQuery = encodeURIComponent(`moving to ${countryName} expat`);
-            const redditUrl = `https://www.reddit.com/search.json?q=${redditQuery}&sort=relevance&limit=3`;
-            
-            // Reddit blocks direct browser requests (CORS). We use AllOrigins as a secure bridge to bypass this.
-            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(redditUrl)}`;
-            
-            const response = await fetch(proxyUrl);
+            // Fetch 3 posts instead of 2
+            const response = await fetch(`https://www.reddit.com/search.json?q=${redditQuery}&sort=relevance&limit=3`);
             
             if (!response.ok) throw new Error('Reddit API blocked or failed');
             
@@ -346,6 +342,7 @@ const schema = {
             const posts = json.data.children;
 
             if (posts.length > 0) {
+              // Map exactly 3 posts, generating clickable cards
               pulseContainer.innerHTML = posts.slice(0,3).map(post => {
                 const p = post.data;
                 const shortTitle = p.title.length > 85 ? p.title.substring(0, 85) + '...' : p.title;
@@ -363,7 +360,7 @@ const schema = {
               throw new Error('No relevant posts found');
             }
           } catch (error) {
-            // Fallback UI matching the clickable card design if the proxy is temporarily down
+            // Fallback UI matching the new clickable card design (in case adblocker stops the fetch)
             pulseContainer.innerHTML = `
               <a href="https://www.reddit.com/search/?q=moving+to+${encodeURIComponent(countryName)}" target="_blank" rel="noopener noreferrer" class="pulse-card">
                 <div class="pulse-info">
@@ -374,6 +371,7 @@ const schema = {
             `;
           }
         })();
+
       });
     </script>
   </body>
