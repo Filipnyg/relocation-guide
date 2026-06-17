@@ -73,9 +73,18 @@ const schema = {
       .hero-image { width: 100%; height: 240px; object-fit: cover; border-radius: 4px; margin-bottom: 2rem; filter: grayscale(20%) contrast(110%); }
       h1 { font-size: 1.75rem; color: #ffffff; margin-top: 0; font-weight: 800; letter-spacing: -0.02em; }
       
-      .toggle-container { display: inline-flex; background: #09090b; padding: 4px; border-radius: 6px; border: 1px solid #27272a; margin: 1.5rem 0; }
+      .toggle-container { display: inline-flex; background: #09090b; padding: 4px; border-radius: 6px; border: 1px solid #27272a; margin: 1.5rem 0 1rem 0; }
       .toggle-container a { padding: 0.65rem 1.25rem; text-decoration: none; color: #a1a1aa; font-weight: 600; border-radius: 4px; font-size: 0.85rem; transition: all 0.15s; }
       .toggle-container a.active { background: #18181b; color: #10b981; border: 1px solid #27272a; }
+
+      /* --- PERSONALIZER WIDGET STYLING --- */
+      .personalizer-widget { background: #09090b; border: 1px solid #27272a; border-radius: 4px; padding: 1.25rem; margin-bottom: 1.5rem; }
+      .personalizer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+      .personalizer-title { font-size: 0.75rem; font-weight: 700; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; }
+      .household-display { font-size: 0.9rem; font-weight: 700; color: #10b981; background: #18181b; padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid #27272a; }
+      .slider-input { -webkit-appearance: none; width: 100%; height: 6px; background: #27272a; border-radius: 3px; outline: none; cursor: pointer; margin: 0.5rem 0; }
+      .slider-input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #10b981; cursor: pointer; transition: transform 0.1s; }
+      .slider-input::-webkit-slider-thumb:hover { transform: scale(1.2); }
       
       .data-grid { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
       .data-row { display: flex; justify-content: space-between; padding: 1rem 1.25rem; background: #09090b; border-radius: 4px; border: 1px solid #27272a; align-items: center; }
@@ -90,7 +99,6 @@ const schema = {
       .btn-twitter { background: #000000; border: 1px solid #27272a; }
       .btn-linkedin { background: #0a66c2; border: 1px solid #0a66c2; }
       
-      /* --- LIVE AGGREGATOR STYLING (FIXED FOR DYNAMIC HTML) --- */
       .aggregator-section { margin-top: 2.5rem; }
       .aggregator-section h3 { font-size: 1rem; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; color: #ffffff; border-bottom: 1px solid #27272a; padding-bottom: 0.5rem; }
       .job-cards-container { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -125,7 +133,7 @@ const schema = {
         <a href="/" class="logo-link">
           <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
         </a>
-        <div class="nav-links" style="display: flex; gap: 1.5rem; align-items: center;">
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
           <a href="/compare" class="nav-text-link">Compare</a>
           <a href="/resources" class="nav-text-link">Resources</a>
           <a href="/guide" class="get-started-btn">Get Started</a>
@@ -152,17 +160,25 @@ const schema = {
           <a href={`/countries/${data.countrySlug}/${data.jobSlug}/local`} class={type === 'local' ? 'active' : ''}>Local Hire</a>
         </nav>
 
+        <section class="personalizer-widget">
+          <div class="personalizer-header">
+            <span class="personalizer-title">Personalize Household Size</span>
+            <span class="household-display" id="householdLabel">1 Person (Single)</span>
+          </div>
+          <input type="range" id="householdSlider" min="1" max="4" value="1" class="slider-input" />
+        </section>
+
         <main>
           {type === 'remote' ? (
             <div class="data-grid">
-              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value" id="dynamicColValue">${data.costOfLiving.toLocaleString()} / mo</span></div>
               <div class="data-row"><span class="data-label">Est. Remote Salary</span><span class="data-value">${estRemoteSalary.toLocaleString()} / mo</span></div>
               <div class="data-row"><span class="data-label">Income Tax</span><span class="data-value">{data.nomadTax}</span></div>
               <div class="data-row"><span class="data-label">Visa Option</span><span class="data-value">{data.nomadVisa}</span></div>
             </div>
           ) : (
             <div class="data-grid">
-              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value">${data.costOfLiving.toLocaleString()} / mo</span></div>
+              <div class="data-row"><span class="data-label">Cost of Living</span><span class="data-value" id="dynamicColValue">${data.costOfLiving.toLocaleString()} / mo</span></div>
               <div class="data-row"><span class="data-label">Local Salary</span><span class="data-value">${data.localSalary.toLocaleString()} / mo</span></div>
               <div class="data-row"><span class="data-label">Income Tax</span><span class="data-value">{localTaxDisplay}</span></div>
               <div class="data-row"><span class="data-label">Visa Option</span><span class="data-value">{data.localVisa}</span></div>
@@ -183,8 +199,6 @@ const schema = {
           </div>
         </div>
 
-
-        <!-- --- LIVE AGGREGATOR MODULE --- -->
         <section class="aggregator-section">
           <h3>Live Openings</h3>
           <div id="liveJobsContainer" class="job-cards-container">
@@ -217,31 +231,63 @@ const schema = {
         </form>
         <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 3rem; margin-bottom: 1rem;">
           <a href="/about" style="color: #a1a1aa; text-decoration: none; font-size: 0.9rem; font-weight: 500;">About Us</a>
+          <a href="/compare" style="color: #a1a1aa; text-decoration: none; font-size: 0.9rem; font-weight: 500;">Compare</a>
           <a href="/resources" style="color: #a1a1aa; text-decoration: none; font-size: 0.9rem; font-weight: 500;">Resources</a>
         </div>
         <p style="margin: 0; font-size: 0.75rem; color: #52525b;">EverywhereJob v2.4.0 — Compiled from official government portals and global salary reports.</p>
       </div>
     </footer>
 
-    <!-- --- CLIENT-SIDE AGGREGATOR ENGINE WITH REAL LIVE DATA --- -->
-    <script define:vars={{ jobTitle: data.jobTitle, countryName: data.countryName, countrySlug: data.countrySlug, nicheUrl: data.nicheJobBoardUrl, nicheName: data.nicheJobBoardName }}>
-      document.addEventListener('DOMContentLoaded', async () => {
+    <script define:vars={{ baseCost: data.costOfLiving, countrySlug: data.countrySlug, jobTitle: data.jobTitle, countryName: data.countryName, nicheUrl: data.nicheJobBoardUrl, nicheName: data.nicheJobBoardName }}>
+      document.addEventListener('DOMContentLoaded', () => {
+        const slider = document.getElementById('householdSlider');
+        const label = document.getElementById('householdLabel');
+        const displayVal = document.getElementById('dynamicColValue');
+
+        // Define custom multipliers based on the country's unique housing/childcare dynamics
+        const highCostMarkets = ["switzerland", "united-states", "singapore", "united-kingdom"];
+        const midCostMarkets = ["germany", "netherlands", "france", "australia", "canada", "japan"];
+
+        const labels = {
+          1: "1 Person (Single)",
+          2: "2 People (Couple)",
+          3: "3 People (Small Family)",
+          4: "4+ People (Large Family)"
+        };
+
+        function calculateCost(val) {
+          let multiplier = 1.0;
+          
+          if (highCostMarkets.includes(countrySlug)) {
+            // High rent inflation markets scale faster for larger apartments & private schooling/childcare
+            if (val === 2) multiplier = 1.75;
+            if (val === 3) multiplier = 2.40;
+            if (val === 4) multiplier = 3.10;
+          } else if (midCostMarkets.includes(countrySlug)) {
+            // Standard progressive scaling
+            if (val === 2) multiplier = 1.60;
+            if (val === 3) multiplier = 2.10;
+            if (val === 4) multiplier = 2.60;
+          } else {
+            // Accessible lifestyle markets scale gently due to affordable regional housing & domestic services
+            if (val === 2) multiplier = 1.45;
+            if (val === 3) multiplier = 1.85;
+            if (val === 4) multiplier = 2.25;
+          }
+
+          const calculated = Math.round(baseCost * multiplier);
+          displayVal.innerText = `$${calculated.toLocaleString()} / mo`;
+        }
+
+        slider.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value);
+          label.innerText = labels[val];
+          calculateCost(val);
+        });
+
+        // Job Discovery Fallback Script
         const container = document.getElementById('liveJobsContainer');
-        
-        // ==========================================
-        // 🔑 PASTE YOUR ADZUNA KEYS HERE
-        // ==========================================
-        const ADZUNA_APP_ID = 'b6391fe1';
-        const ADZUNA_APP_KEY = '06b9ac7e075cb7a5b53ed86f8e2506f4';
-        // ==========================================
-
-        // Map your internal country codes to standard ISO 2-letter codes for Adzuna's API
-        const countryMap = { "united-states": "us", "united-kingdom": "gb", "canada": "ca", "australia": "au", "germany": "de", "france": "fr", "netherlands": "nl", "sweden": "se", "spain": "es", "italy": "it", "brazil": "br", "mexico": "mx", "singapore": "sg", "japan": "jp", "switzerland": "ch", "austria": "at" };
-        const adzunaCountry = countryMap[countrySlug] || "us"; // Fallback to 'us' if code matches no explicit key
-
         let jobCardsHtml = '';
-
-        // 1. If an explicit manual niche listing exists in your data.json, pin it first
         if (nicheUrl && nicheName) {
           jobCardsHtml += `
             <div class="live-job-card">
@@ -253,55 +299,23 @@ const schema = {
             </div>
           `;
         }
-
-        try {
-          // 2. Fetch direct real-time data from Adzuna API matching the current role and region
-          const response = await fetch(`https://api.adzuna.com/v1/api/jobs/${adzunaCountry}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&results_per_page=3&what=${encodeURIComponent(jobTitle)}`);
-          
-          if (!response.ok) throw new Error('API request failed');
-          const apiData = await response.json();
-
-          if (apiData.results && apiData.results.length > 0) {
-            // Loop through live results and inject accurate metadata
-            apiData.results.forEach(job => {
-              const company = job.company?.display_name || "Verified Employer";
-              const location = job.location?.display_name || countryName;
-              
-              jobCardsHtml += `
-                <div class="live-job-card">
-                  <div class="live-job-info">
-                    <h4>${job.title}</h4>
-                    <p>${company} — ${location}</p>
-                  </div>
-                  <a href="${job.redirect_url}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Apply Now ↗</a>
-                </div>
-              `;
-            });
-            container.innerHTML = jobCardsHtml;
-          } else {
-            throw new Error('No direct results found');
-          }
-
-        } catch (error) {
-          // 3. Robust clean fallback if keys are missing or API encounters clean failure
-          jobCardsHtml += `
-            <div class="live-job-card">
-              <div class="live-job-info">
-                <h4>Active Openings on LinkedIn</h4>
-                <p>Launch live contextual application queries</p>
-              </div>
-              <a href="https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(jobTitle)}&location=${encodeURIComponent(countryName)}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Search LinkedIn ↗</a>
+        jobCardsHtml += `
+          <div class="live-job-card">
+            <div class="live-job-info">
+              <h4>Active Openings on LinkedIn</h4>
+              <p>Launch live contextual application queries</p>
             </div>
-            <div class="live-job-card">
-              <div class="live-job-info">
-                <h4>Active Openings on Google Jobs</h4>
-                <p>Launch live indexed index sweeps</p>
-              </div>
-              <a href="https://www.google.com/search?q=${encodeURIComponent(jobTitle)}+jobs+in+${encodeURIComponent(countryName)}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Search Google ↗</a>
+            <a href="https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(jobTitle)}&location=${encodeURIComponent(countryName)}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Search LinkedIn ↗</a>
+          </div>
+          <div class="live-job-card">
+            <div class="live-job-info">
+              <h4>Active Openings on Google Jobs</h4>
+              <p>Launch live indexed index sweeps</p>
             </div>
-          `;
-          container.innerHTML = jobCardsHtml;
-        }
+            <a href="https://www.google.com/search?q=${encodeURIComponent(jobTitle)}+jobs+in+${encodeURIComponent(countryName)}" target="_blank" rel="noopener noreferrer" class="apply-now-btn">Search Google ↗</a>
+          </div>
+        `;
+        container.innerHTML = jobCardsHtml;
       });
     </script>
   </body>
