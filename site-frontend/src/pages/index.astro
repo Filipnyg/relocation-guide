@@ -1,5 +1,6 @@
 ---
 import data from '../data.json';
+import Layout from '../layouts/Layout.astro';
 
 const countries = [...new Set(data.map(item => item.countryName))].sort();
 const jobs = [...new Set(data.map(item => item.jobTitle))].sort();
@@ -21,187 +22,133 @@ const searchData = [
   ...jobs.map(j => ({ name: j, url: `/jobs/${getJobSlug(j)}`, type: 'Profession' }))
 ];
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EverywhereJob - Global Relocation, Visa & Salary Guides</title>
-    <meta name="description" content="Compare verified salaries, living costs, and visa requirements across 40 countries." />
+
+<Layout title="EverywhereJob - Global Relocation, Visa & Salary Guides" description="Compare verified salaries, living costs, and visa requirements across 40 countries.">
+  <style>
+    .hero-intro { text-align: center; margin-bottom: 3rem; }
+    .hero-intro h1 { font-size: 2.25rem; color: #ffffff; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .hero-intro p { font-size: 1.05rem; color: #a1a1aa; max-width: 550px; margin: 0 auto; }
     
-    <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #09090b; color: #e4e4e7; line-height: 1.5; margin: 0; padding-bottom: 0; }
-      .site-header { background: #18181b; border-bottom: 1px solid #27272a; padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
-      .header-container { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
-      .logo-text { font-weight: 700; font-size: 1.1rem; color: #ffffff; letter-spacing: -0.02em; text-transform: uppercase; }
-      .logo-highlight { color: #10b981; }
-      .nav-text-link { color: #a1a1aa; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.15s; }
-      .nav-text-link:hover { color: #ffffff; }
-      .get-started-btn { background: #10b981; color: #09090b; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: background 0.15s; }
-      .get-started-btn:hover { background: #059669; }
-      
-      .wrapper { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
-      .hero-intro { text-align: center; margin-bottom: 3rem; }
-      .hero-intro h1 { font-size: 2.25rem; color: #ffffff; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
-      .hero-intro p { font-size: 1.05rem; color: #a1a1aa; max-width: 550px; margin: 0 auto; }
-      
-      .search-container { max-width: 600px; margin: 0 auto 4rem auto; position: relative; }
-      .search-container input { width: 100%; padding: 1rem 1.25rem 1rem 2.5rem; font-size: 1rem; background: #18181b; color: #ffffff; border-radius: 6px; border: 1px solid #27272a; outline: none; box-sizing: border-box; transition: border-color 0.15s; }
-      .search-container input:focus { border-color: #10b981; }
-      .search-icon { position: absolute; left: 0.85rem; top: 1.05rem; font-size: 0.95rem; color: #a1a1aa; }
-      
-      .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #18181b; border: 1px solid #27272a; border-top: none; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 50; max-height: 300px; overflow-y: auto; display: none; }
-      
-      :global(.search-dropdown a) { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.25rem; color: #e4e4e7 !important; text-decoration: none !important; border-bottom: 1px solid #27272a; font-size: 0.95rem; }
-      :global(.search-dropdown a:last-child) { border-bottom: none; }
-      :global(.search-dropdown a:hover) { background: #27272a; color: #10b981 !important; }
-      :global(.type-badge) { font-size: 0.7rem; background: #09090b; color: #a1a1aa; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; text-transform: uppercase; border: 1px solid #27272a; }
+    .search-container { max-width: 600px; margin: 0 auto 4rem auto; position: relative; }
+    .search-container input { width: 100%; padding: 1rem 1.25rem 1rem 2.5rem; font-size: 1rem; background: #18181b; color: #ffffff; border-radius: 6px; border: 1px solid #27272a; outline: none; box-sizing: border-box; transition: border-color 0.15s; }
+    .search-container input:focus { border-color: #10b981; }
+    .search-icon { position: absolute; left: 0.85rem; top: 1.05rem; font-size: 0.95rem; color: #a1a1aa; }
+    
+    .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #18181b; border: 1px solid #27272a; border-top: none; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 50; max-height: 300px; overflow-y: auto; display: none; }
+    
+    :global(.search-dropdown a) { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.25rem; color: #e4e4e7 !important; text-decoration: none !important; border-bottom: 1px solid #27272a; font-size: 0.95rem; }
+    :global(.search-dropdown a:last-child) { border-bottom: none; }
+    :global(.search-dropdown a:hover) { background: #27272a; color: #10b981 !important; }
+    :global(.type-badge) { font-size: 0.7rem; background: #09090b; color: #a1a1aa; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; text-transform: uppercase; border: 1px solid #27272a; }
 
-      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
-      .card { background: #18181b; border-radius: 6px; padding: 2rem; border: 1px solid #27272a; }
-      .card h2 { font-size: 1.1rem; color: #ffffff; margin-top: 0; margin-bottom: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #27272a; padding-bottom: 0.75rem; }
-      
-      .leaderboard-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-      .leaderboard-list li a { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #09090b; border: 1px solid #27272a; border-radius: 4px; color: #e4e4e7; text-decoration: none; font-size: 0.9rem; transition: border-color 0.15s; }
-      .leaderboard-list li a:hover { border-color: #10b981; color: #ffffff; }
-      .stat-badge { background: #27272a; color: #a1a1aa; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
-      .leaderboard-list li a:hover .stat-badge { color: #10b981; }
-      
-      .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-      .link-list li a { display: block; padding: 0.75rem 1rem; background: #09090b; border: 1px solid #27272a; border-radius: 4px; color: #e4e4e7; text-decoration: none; font-size: 0.9rem; transition: border-color 0.15s; }
-      .link-list li a:hover { border-color: #10b981; color: #ffffff; }
-      
-      .contact-pane { background: #18181b; border-top: 1px solid #27272a; color: #e4e4e7; padding: 4rem 1.5rem; text-align: center; }
-      .contact-container { max-width: 600px; margin: 0 auto; }
-      .contact-container h2 { margin-top: 0; font-size: 1.5rem; margin-bottom: 0.5rem; color: #ffffff; font-weight: 700; letter-spacing: -0.02em; }
-      .contact-form { display: flex; flex-direction: column; gap: 0.75rem; text-align: left; }
-      .contact-form input, .contact-form textarea { width: 100%; padding: 0.85rem; border-radius: 4px; border: 1px solid #27272a; background: #09090b; color: white; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; outline: none; }
-      .contact-form input:focus, .contact-form textarea:focus { border-color: #10b981; }
-      .contact-form button { background: #10b981; color: #09090b; border: none; padding: 0.85rem; border-radius: 4px; font-weight: 700; cursor: pointer; transition: background 0.15s; margin-top: 0.25rem; font-size: 0.95rem; }
-      .contact-form button:hover { background: #059669; }
-      @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .hero-intro h1 { font-size: 1.75rem; } }
-    </style>
-  </head>
-  <body>
-    <header class="site-header">
-    <div class="header-container">
-        <a href="/" class="logo-link">
-          <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
-        </a>
-        <div class="nav-links">
-          <a href="/compare" class="nav-text-link">Compare</a>
-          <a href="/resources" class="nav-text-link">Resources</a>
-          <a href="/guide" class="get-started-btn">Get Started</a>
-        </div>
-      </div>
-    </header>
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+    .card { background: #18181b; border-radius: 6px; padding: 2rem; border: 1px solid #27272a; }
+    .card h2 { font-size: 1.1rem; color: #ffffff; margin-top: 0; margin-bottom: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #27272a; padding-bottom: 0.75rem; }
+    
+    .leaderboard-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .leaderboard-list li a { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #09090b; border: 1px solid #27272a; border-radius: 4px; color: #e4e4e7; text-decoration: none; font-size: 0.9rem; transition: border-color 0.15s; }
+    .leaderboard-list li a:hover { border-color: #10b981; color: #ffffff; }
+    .stat-badge { background: #27272a; color: #a1a1aa; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+    .leaderboard-list li a:hover .stat-badge { color: #10b981; }
+    
+    .link-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .link-list li a { display: block; padding: 0.75rem 1rem; background: #09090b; border: 1px solid #27272a; border-radius: 4px; color: #e4e4e7; text-decoration: none; font-size: 0.9rem; transition: border-color 0.15s; }
+    .link-list li a:hover { border-color: #10b981; color: #ffffff; }
+    
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .hero-intro h1 { font-size: 1.75rem; } }
+  </style>
 
-    <div class="wrapper">
-      <section class="hero-intro">
-        <h1>Global Relocation Data</h1>
-        <p>Compare verified salaries, living costs, and visa requirements for in-demand professions around the world.</p>
-      </section>
+  <div class="wrapper">
+    <section class="hero-intro">
+      <h1>Global Relocation Data</h1>
+      <p>Compare verified salaries, living costs, and visa requirements for in-demand professions around the world.</p>
+    </section>
 
-      <div class="search-container">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="directorySearch" placeholder="Search for a country or profession..." autocomplete="off" />
-        <div id="searchResults" class="search-dropdown"></div>
-      </div>
-
-      <section class="grid-2">
-        <div class="card">
-          <h2>Top Paying Markets</h2>
-          <ul class="leaderboard-list">
-            {topPayingMarkets.map((market) => (
-              <li><a href={`/countries/${market.countrySlug}`}><span>{market.countryName}</span><span class="stat-badge">${market.localSalary.toLocaleString()} / mo</span></a></li>
-            ))}
-          </ul>
-        </div>
-        <div class="card">
-          <h2>Quality of Life Index</h2>
-          <ul class="leaderboard-list">
-            {topQualityOfLife.map((country) => (
-              <li><a href={`/countries/${country.slug}`}><span>{country.name}</span><span class="stat-badge">Score: {country.score}/100</span></a></li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <main class="grid-2">
-        <div class="card">
-          <h2>Explore By Country</h2>
-          <ul class="link-list filterable-list">
-            {countries.map((countryName) => (
-              <li><a href={`/countries/${getCountrySlug(countryName)}`}>{countryName}</a></li>
-            ))}
-          </ul>
-        </div>
-        <div class="card">
-          <h2>Explore By Profession</h2>
-          <ul class="link-list filterable-list">
-            {jobs.map((jobTitle) => (
-              <li><a href={`/jobs/${getJobSlug(jobTitle)}`}>{jobTitle}</a></li>
-            ))}
-          </ul>
-        </div>
-      </main>
+    <div class="search-container">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="directorySearch" placeholder="Search for a country or profession..." autocomplete="off" />
+      <div id="searchResults" class="search-dropdown"></div>
     </div>
 
-    <footer class="contact-pane">
-      <div class="contact-container">
-        <!-- Your existing contact form stays here -->
-        
-        <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 3rem; margin-bottom: 1rem;">
-          <a href="/about" style="color: #a1a1aa; text-decoration: none; font-size: 0.9rem; font-weight: 500;">About Us</a>
-          <a href="/resources" style="color: #a1a1aa; text-decoration: none; font-size: 0.9rem; font-weight: 500;">Resources</a>
-        </div>
-        <p style="margin: 0; font-size: 0.75rem; color: #52525b;">EverywhereJob v2.4.0 — Compiled from official government portals and global salary reports.</p>
+    <section class="grid-2">
+      <div class="card">
+        <h2>Top Paying Markets</h2>
+        <ul class="leaderboard-list">
+          {topPayingMarkets.map((market) => (
+            <li><a href={`/countries/${market.countrySlug}`}><span>{market.countryName}</span><span class="stat-badge">${market.localSalary.toLocaleString()} / mo</span></a></li>
+          ))}
+        </ul>
       </div>
-    </footer>
+      <div class="card">
+        <h2>Quality of Life Index</h2>
+        <ul class="leaderboard-list">
+          {topQualityOfLife.map((country) => (
+            <li><a href={`/countries/${country.slug}`}><span>{country.name}</span><span class="stat-badge">Score: {country.score}/100</span></a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
 
-    <script define:vars={{ searchData }}>
-      document.addEventListener('DOMContentLoaded', () => {
-        const searchInput = document.getElementById('directorySearch');
-        const searchResults = document.getElementById('searchResults');
-        const listItems = document.querySelectorAll('.filterable-list li');
+    <main class="grid-2">
+      <div class="card">
+        <h2>Explore By Country</h2>
+        <ul class="link-list filterable-list">
+          {countries.map((countryName) => (
+            <li><a href={`/countries/${getCountrySlug(countryName)}`}>{countryName}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Explore By Profession</h2>
+        <ul class="link-list filterable-list">
+          {jobs.map((jobTitle) => (
+            <li><a href={`/jobs/${getJobSlug(jobTitle)}`}>{jobTitle}</a></li>
+          ))}
+        </ul>
+      </div>
+    </main>
+  </div>
 
-        searchInput.addEventListener('input', (e) => {
-          const term = e.target.value.toLowerCase().trim();
-          
-          listItems.forEach(li => {
-            const text = li.textContent.toLowerCase();
-            li.style.display = text.includes(term) ? 'block' : 'none';
-          });
+  <script define:vars={{ searchData }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('directorySearch');
+      const searchResults = document.getElementById('searchResults');
+      const listItems = document.querySelectorAll('.filterable-list li');
 
-          if (term.length < 1) {
-            searchResults.style.display = 'none';
-            return;
-          }
-
-          const matches = searchData.filter(item => item.name.toLowerCase().includes(term));
-          
-          if (matches.length > 0) {
-            searchResults.innerHTML = matches.slice(0, 6).map(match => `
-              <a href="${match.url}">
-                <strong>${match.name}</strong> 
-                <span class="type-badge">${match.type}</span>
-              </a>
-            `).join('');
-            searchResults.style.display = 'block';
-          } else {
-            searchResults.innerHTML = `<div style="padding: 0.85rem 1.25rem; color: #52525b; font-style: italic; font-size: 0.9rem;">No exact matches found.</div>`;
-            searchResults.style.display = 'block';
-          }
+      searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        
+        listItems.forEach(li => {
+          const text = li.textContent.toLowerCase();
+          li.style.display = text.includes(term) ? 'block' : 'none';
         });
 
-        document.addEventListener('click', (e) => {
-          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-            searchResults.style.display = 'none';
-          }
-        });
+        if (term.length < 1) {
+          searchResults.style.display = 'none';
+          return;
+        }
+
+        const matches = searchData.filter(item => item.name.toLowerCase().includes(term));
+        
+        if (matches.length > 0) {
+          searchResults.innerHTML = matches.slice(0, 6).map(match => `
+            <a href="${match.url}">
+              <strong>${match.name}</strong> 
+              <span class="type-badge">${match.type}</span>
+            </a>
+          `).join('');
+          searchResults.style.display = 'block';
+        } else {
+          searchResults.innerHTML = `<div style="padding: 0.85rem 1.25rem; color: #52525b; font-style: italic; font-size: 0.9rem;">No exact matches found.</div>`;
+          searchResults.style.display = 'block';
+        }
       });
-    </script>
-  </body>
 
-</html>
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+          searchResults.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</Layout>

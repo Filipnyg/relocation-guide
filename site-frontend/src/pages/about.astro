@@ -1,67 +1,23 @@
 ---
+import Layout from '../layouts/Layout.astro';
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About Us | EverywhereJob</title>
-    <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #09090b; color: #e4e4e7; line-height: 1.6; margin: 0; padding-bottom: 0; }
-      .site-header { background: #18181b; border-bottom: 1px solid #27272a; padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100; margin-bottom: 3rem; }
-      .header-container { max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-      .logo-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
-      .logo-text { font-weight: 700; font-size: 1.1rem; color: #ffffff; letter-spacing: -0.02em; text-transform: uppercase; }
-      .logo-highlight { color: #10b981; }
-      .nav-text-link { color: #a1a1aa; text-decoration: none; font-weight: 500; font-size: 0.9rem; }
-      .nav-text-link:hover { color: #ffffff; }
-      .get-started-btn { background: #10b981; color: #09090b; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.85rem; }
-      
-      .wrapper { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem 1.5rem; }
-      .card { background: #18181b; border-radius: 6px; padding: 2.5rem; border: 1px solid #27272a; }
-      h1 { font-size: 2rem; color: #ffffff; margin-top: 0; margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
-      p { color: #a1a1aa; font-size: 1.05rem; margin-bottom: 1.5rem; }
-      p:last-child { margin-bottom: 0; }
-      
-      .contact-pane { background: #18181b; color: #e4e4e7; padding: 3rem 1.5rem; text-align: center; border-top: 1px solid #27272a; }
-      .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1.5rem; }
-      .footer-links a { color: #a1a1aa; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
-      .footer-links a:hover { color: #10b981; }
-    </style>
-  </head>
-  <body>
-    <header class="site-header">
-    <div class="header-container">
-        <a href="/" class="logo-link">
-          <span class="logo-text">Everywhere<span class="logo-highlight">Job</span></span>
-        </a>
-        <div class="nav-links">
-          <a href="/compare" class="nav-text-link">Compare</a>
-          <a href="/resources" class="nav-text-link">Resources</a>
-          <a href="/guide" class="get-started-btn">Get Started</a>
-        </div>
-      </div>
-    </header>
 
-    <div class="wrapper">
-      <div class="card">
-        <h1>About EverywhereJob</h1>
-        <p>The idea for EverywhereJob started after I relocated to Sweden to join Spotify. While the move itself was an incredible opportunity, the actual process of planning it was overwhelming.</p>
-        
-        <p>Through countless conversations with other expats, I realized we all shared the same frustrations. Finding reliable, up-to-date salary data, navigating complex and ever-changing visa requirements, and trying to get a realistic picture of the true cost of living in a new country meant digging through dozens of fragmented websites and outdated forums.</p>
+<Layout title="About Us | EverywhereJob">
+  <style>
+    .card { background: #18181b; border-radius: 6px; padding: 2.5rem; border: 1px solid #27272a; }
+    h1 { font-size: 2rem; color: #ffffff; margin-top: 0; margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    p { color: #a1a1aa; font-size: 1.05rem; margin-bottom: 1.5rem; }
+    p:last-child { margin-bottom: 0; }
+  </style>
 
-        <p>I built this website to solve that problem. EverywhereJob is designed to be the tool I wish I had—a centralized, clear, and informative platform to help people compare countries and plan their international moves with confidence.</p>
-      </div>
+  <div class="wrapper">
+    <div class="card">
+      <h1>About EverywhereJob</h1>
+      <p>The idea for EverywhereJob started after I relocated to Sweden to join Spotify. While the move itself was an incredible opportunity, the actual process of planning it was overwhelming.</p>
+      
+      <p>Through countless conversations with other expats, I realized we all shared the same frustrations. Finding reliable, up-to-date salary data, navigating complex and ever-changing visa requirements, and trying to get a realistic picture of the true cost of living in a new country meant digging through dozens of fragmented websites and outdated forums.</p>
+
+      <p>I built this website to solve that problem. EverywhereJob is designed to be the tool I wish I had—a centralized, clear, and informative platform to help people compare countries and plan their international moves with confidence.</p>
     </div>
-
-    <footer class="contact-pane">
-      <div style="max-width: 600px; margin: 0 auto;">
-        <div class="footer-links">
-          <a href="/about">About Us</a>
-          <a href="/resources">Resources</a>
-        </div>
-        <p style="font-size: 0.75rem; color: #52525b;">EverywhereJob v2.4.0 — Compiled from official government portals and global salary reports.</p>
-      </div>
-    </footer>
-  </body>
-</html>
+  </div>
+</Layout>
